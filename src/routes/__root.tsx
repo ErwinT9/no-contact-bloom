@@ -34,6 +34,7 @@ import { hideNativeSplash } from "@/lib/native/splash";
 import { initTheme } from "@/lib/theme";
 import i18n from "@/lib/i18n";
 import { startNetworkWatcher, subscribeNetwork } from "@/lib/offline/network";
+import { initializeInsertAffiliate } from "@/lib/affiliate/init";
 import { flushQueue, startSyncEngine } from "@/lib/offline/syncQueue";
 
 function NotFoundComponent() {
@@ -162,6 +163,11 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    // Initialize affiliate tracking first so it is ready before any RevenueCat
+    // attribution logic runs. Insert Links deep-linking is automatic once the
+    // SDK has been initialized.
+    void initializeInsertAffiliate();
+
     initPerformance();
     instrumentWebViewRequests();
     void initCrashlytics();
