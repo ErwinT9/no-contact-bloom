@@ -1,5 +1,7 @@
 import { InsertAffiliate } from "insert-affiliate-js-sdk";
 
+import { syncAffiliateToRevenueCat, watchAffiliateForRevenueCat } from "@/lib/affiliate/revenuecat";
+
 const INSERT_AFFILIATE_COMPANY_CODE = "NPtL2fWIcMew0AzjOs2BhSs7mew1";
 
 let initStarted = false;
@@ -22,6 +24,9 @@ export async function initializeInsertAffiliate(): Promise<void> {
   initPromise = InsertAffiliate.initialize(INSERT_AFFILIATE_COMPANY_CODE, true)
     .then(() => {
       console.log("[insert-affiliate] SDK initialized");
+      // Push affiliate attribution into RevenueCat as soon as it is known.
+      watchAffiliateForRevenueCat();
+      void syncAffiliateToRevenueCat();
     })
     .catch((error) => {
       console.error("[insert-affiliate] SDK initialization failed", error);
