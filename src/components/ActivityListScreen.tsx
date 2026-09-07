@@ -231,7 +231,10 @@ export function ActivityListScreen({
           onPointerDown={(event) => event.preventDefault()}
           onTouchMove={(event) => event.preventDefault()}
         >
-          {successAnimation({ onComplete: () => setShowSuccess(false) })}
+          <div key={successKey} className="flex items-center justify-center">
+            {successAnimation({ onComplete: () => setShowSuccess(false) })}
+          </div>
+
         </div>
       ) : null}
 
