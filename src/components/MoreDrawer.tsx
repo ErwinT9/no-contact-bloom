@@ -46,7 +46,7 @@ import { SUPPORT_EMAIL, copySupportEmail, openFeedbackEmail } from "@/lib/feedba
 import { toastOnce } from "@/lib/toastOnce";
 import { cn } from "@/lib/utils";
 
-const APP_VERSION = "1.0.0";
+
 
 export function MoreDrawer({
   open,
