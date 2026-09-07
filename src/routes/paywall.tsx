@@ -161,15 +161,30 @@ function Paywall() {
                       </span>
                     ) : null}
                   </span>
-                  {pkg.period ? (
+                  {pkg.kind === "yearly" ? (
+                    <>
+                      <span className="mt-0.5 block font-semibold tabular-nums">
+                        {weeklyEquivalent(pkg) ?? pkg.priceString}
+                        {weeklyEquivalent(pkg) ? " / week" : null}
+                      </span>
+                      <span className="mt-1 inline-flex w-fit items-center rounded-full bg-success/15 px-2 py-0.5 text-[0.6rem] font-semibold tracking-wide text-success uppercase">
+                        Best value
+                      </span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {pkg.priceString} billed yearly
+                      </span>
+                    </>
+                  ) : pkg.period ? (
                     <span className="mt-0.5 block text-xs text-muted-foreground">
                       Billed every {pkg.period}
                     </span>
                   ) : null}
                 </span>
-                <span className="shrink-0 text-right font-semibold tabular-nums">
-                  {pkg.priceString}
-                </span>
+                {pkg.kind === "yearly" ? null : (
+                  <span className="shrink-0 text-right font-semibold tabular-nums">
+                    {pkg.priceString}
+                  </span>
+                )}
               </button>
             );
           })
