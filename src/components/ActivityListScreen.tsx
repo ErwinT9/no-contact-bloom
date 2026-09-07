@@ -210,12 +210,14 @@ export function ActivityListScreen({
         <div
           role="status"
           aria-live="polite"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-6 backdrop-blur-sm animate-fade-in"
-          onClick={() => setShowSuccess(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-background/85 p-8 backdrop-blur-md animate-fade-in dark:bg-background/90"
+          onPointerDown={(event) => event.preventDefault()}
+          onTouchMove={(event) => event.preventDefault()}
         >
-          {successAnimation}
+          {successAnimation({ onComplete: () => setShowSuccess(false) })}
         </div>
       ) : null}
+
     </AppShell>
   );
 }
