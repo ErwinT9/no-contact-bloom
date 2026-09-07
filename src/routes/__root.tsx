@@ -34,6 +34,7 @@ import { hideNativeSplash } from "@/lib/native/splash";
 import { initTheme } from "@/lib/theme";
 import i18n from "@/lib/i18n";
 import { startNetworkWatcher, subscribeNetwork } from "@/lib/offline/network";
+import { initializeInsertAffiliate } from "@/lib/affiliate/init";
 import { flushQueue, startSyncEngine } from "@/lib/offline/syncQueue";
 
 function NotFoundComponent() {
