@@ -45,6 +45,22 @@ const BENEFIT_KEYS = [
   { key: "cancel", fallback: "Cancel anytime" },
 ] as const;
 
+/** Yearly price ÷ 52, formatted in the store's own localized currency. */
+function weeklyEquivalent(pkg: { price: number | null; currencyCode: string }): string | null {
+  if (!pkg.price || !pkg.currencyCode) return null;
+  const weekly = pkg.price / 52;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: pkg.currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(weekly);
+  } catch {
+    return null;
+  }
+}
+
 function Paywall() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -161,15 +177,30 @@ function Paywall() {
                       </span>
                     ) : null}
                   </span>
-                  {pkg.period ? (
+                  {pkg.kind === "yearly" ? (
+                    <>
+                      <span className="mt-0.5 block font-semibold tabular-nums">
+                        {weeklyEquivalent(pkg) ?? pkg.priceString}
+                        {weeklyEquivalent(pkg) ? " / week" : null}
+                      </span>
+                      <span className="mt-1 inline-flex w-fit items-center rounded-full bg-success/15 px-2 py-0.5 text-[0.6rem] font-semibold tracking-wide text-success uppercase">
+                        Best value
+                      </span>
+                      <span className="mt-1 block text-xs text-muted-foreground">
+                        {pkg.priceString} billed yearly
+                      </span>
+                    </>
+                  ) : pkg.period ? (
                     <span className="mt-0.5 block text-xs text-muted-foreground">
                       Billed every {pkg.period}
                     </span>
                   ) : null}
                 </span>
-                <span className="shrink-0 text-right font-semibold tabular-nums">
-                  {pkg.priceString}
-                </span>
+                {pkg.kind === "yearly" ? null : (
+                  <span className="shrink-0 text-right font-semibold tabular-nums">
+                    {pkg.priceString}
+                  </span>
+                )}
               </button>
             );
           })
