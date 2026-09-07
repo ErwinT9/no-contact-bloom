@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Trash2 } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
@@ -186,8 +187,10 @@ export function ActivityListScreen({
               {suggestion}
             </button>
           ))}
-        </div>
-      ) : null}
+        </div>,
+            document.body,
+          )
+        : null}
 
       <ul className="mt-5 space-y-3">
         {list.length === 0 ? (
@@ -223,11 +226,13 @@ export function ActivityListScreen({
         ))}
       </ul>
 
-      {showSuccess && successAnimation ? (
+      {showSuccess && successAnimation && typeof document !== "undefined"
+        ? createPortal(
         <div
           role="status"
           aria-live="polite"
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-background/85 p-8 backdrop-blur-md animate-fade-in dark:bg-background/90"
+          style={{ zIndex: 2147483647 }}
+          className="fixed inset-0 flex items-center justify-center overflow-hidden bg-background/85 p-8 backdrop-blur-md animate-fade-in dark:bg-background/90"
           onPointerDown={(event) => event.preventDefault()}
           onTouchMove={(event) => event.preventDefault()}
         >
@@ -235,8 +240,10 @@ export function ActivityListScreen({
             {successAnimation({ onComplete: () => setShowSuccess(false) })}
           </div>
 
-        </div>
-      ) : null}
+        </div>,
+            document.body,
+          )
+        : null}
 
     </AppShell>
   );
