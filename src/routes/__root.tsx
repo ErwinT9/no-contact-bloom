@@ -163,6 +163,11 @@ function RootComponent() {
   const router = useRouter();
 
   useEffect(() => {
+    // Initialize affiliate tracking first so it is ready before any RevenueCat
+    // attribution logic runs. Insert Links deep-linking is automatic once the
+    // SDK has been initialized.
+    void initializeInsertAffiliate();
+
     initPerformance();
     instrumentWebViewRequests();
     void initCrashlytics();
