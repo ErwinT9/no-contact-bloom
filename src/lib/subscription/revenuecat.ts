@@ -148,6 +148,8 @@ export type OfferingPackage = {
   kind: "yearly" | "weekly" | "other";
   title: string;
   priceString: string;
+  /** Numeric price in the localized currency, as reported by the store. */
+  price: number | null;
   currencyCode: string;
   period: string | null;
   /** e.g. "30 days free" — always derived from RevenueCat's intro/free-trial data. */
