@@ -46,7 +46,7 @@ import { SUPPORT_EMAIL, copySupportEmail, openFeedbackEmail } from "@/lib/feedba
 import { toastOnce } from "@/lib/toastOnce";
 import { cn } from "@/lib/utils";
 
-const APP_VERSION = "1.0.0";
+
 
 export function MoreDrawer({
   open,
@@ -315,23 +315,6 @@ export function MoreDrawer({
             </p>
             <p className="font-medium text-foreground">
               No Contact. One day at a time. One step closer to healing.
-            </p>
-            <p>
-              <span className="text-muted-foreground">{t("drawer.version")}</span> · {APP_VERSION}
-            </p>
-            <p>
-              <span className="text-muted-foreground">{t("drawer.developer")}</span> ·{" "}
-              {t("drawer.developerName", "No Contact Labs")}
-            </p>
-            <p>
-              <span className="text-muted-foreground">
-                {t("drawer.openSourceLibraries", "Open-source libraries")}
-              </span>{" "}
-              ·{" "}
-              {t(
-                "drawer.openSourceList",
-                "React, TanStack Router & Query, Capacitor, Supabase JS, Radix UI, Tailwind CSS, lucide-react, canvas-confetti.",
-              )}
             </p>
             <p className="text-muted-foreground">{t("drawer.privacyNote")}</p>
             <Button
