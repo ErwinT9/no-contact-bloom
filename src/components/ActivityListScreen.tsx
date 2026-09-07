@@ -50,12 +50,12 @@ export function ActivityListScreen({
   emptyText: string;
   illustration?: ReactNode;
   /**
-   * Optional Lottie/animation node shown centered on screen after a successful
-   * save. When provided, the success overlay is rendered for a few seconds on
-   * every successful add. Only pass this from features that want it (e.g. the
-   * Daily Journal), leaving all other consumers untouched.
+   * Optional Lottie/animation renderer shown centered on screen after a
+   * successful save. When provided, a full-screen overlay is rendered on every
+   * successful add and dismissed as soon as the animation reports completion.
    */
-  successAnimation?: ReactNode;
+  successAnimation?: (options: { onComplete: () => void }) => ReactNode;
+
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -64,6 +64,7 @@ export function ActivityListScreen({
   const [main, setMain] = useState("");
   const [note, setNote] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successKey, setSuccessKey] = useState(0);
   const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -71,6 +72,18 @@ export function ActivityListScreen({
       if (successTimer.current) clearTimeout(successTimer.current);
     };
   }, []);
+
+  // Block page scrolling (and rubber-banding on mobile) while the overlay plays.
+  useEffect(() => {
+    if (!showSuccess) return;
+    const { body } = document;
+    const previous = body.style.overflow;
+    body.style.overflow = "hidden";
+    return () => {
+      body.style.overflow = previous;
+    };
+  }, [showSuccess]);
+
 
   const items = useQuery({
     queryKey: [cacheKey, userId],
@@ -89,9 +102,13 @@ export function ActivityListScreen({
       // before the animation state is set.
       if (successAnimation) {
         setShowSuccess(true);
+        // Remount the animation so every save replays it from the start.
+        setSuccessKey((value) => value + 1);
         if (successTimer.current) clearTimeout(successTimer.current);
-        successTimer.current = setTimeout(() => setShowSuccess(false), 4200);
+        // Safety net in case the animation never reports completion.
+        successTimer.current = setTimeout(() => setShowSuccess(false), 8000);
       }
+
       setMain("");
       setNote("");
       queryClient.setQueryData([cacheKey, userId], rows);
@@ -210,12 +227,17 @@ export function ActivityListScreen({
         <div
           role="status"
           aria-live="polite"
-          className="fixed inset-0 z-50 flex items-center justify-center bg-background/70 px-6 backdrop-blur-sm animate-fade-in"
-          onClick={() => setShowSuccess(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden bg-background/85 p-8 backdrop-blur-md animate-fade-in dark:bg-background/90"
+          onPointerDown={(event) => event.preventDefault()}
+          onTouchMove={(event) => event.preventDefault()}
         >
-          {successAnimation}
+          <div key={successKey} className="flex items-center justify-center">
+            {successAnimation({ onComplete: () => setShowSuccess(false) })}
+          </div>
+
         </div>
       ) : null}
+
     </AppShell>
   );
 }
