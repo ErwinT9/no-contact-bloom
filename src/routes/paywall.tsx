@@ -45,6 +45,22 @@ const BENEFIT_KEYS = [
   { key: "cancel", fallback: "Cancel anytime" },
 ] as const;
 
+/** Yearly price ÷ 52, formatted in the store's own localized currency. */
+function weeklyEquivalent(pkg: { price: number | null; currencyCode: string }): string | null {
+  if (!pkg.price || !pkg.currencyCode) return null;
+  const weekly = pkg.price / 52;
+  try {
+    return new Intl.NumberFormat(undefined, {
+      style: "currency",
+      currency: pkg.currencyCode,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(weekly);
+  } catch {
+    return null;
+  }
+}
+
 function Paywall() {
   const { t } = useTranslation();
   const navigate = useNavigate();
