@@ -1,5 +1,7 @@
 import { InsertAffiliate } from "insert-affiliate-js-sdk";
 
+import { syncAffiliateToRevenueCat, watchAffiliateForRevenueCat } from "@/lib/affiliate/revenuecat";
+
 const INSERT_AFFILIATE_COMPANY_CODE = "NPtL2fWIcMew0AzjOs2BhSs7mew1";
 
 let initStarted = false;
