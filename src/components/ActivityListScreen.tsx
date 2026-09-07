@@ -64,6 +64,7 @@ export function ActivityListScreen({
   const [main, setMain] = useState("");
   const [note, setNote] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
+  const [successKey, setSuccessKey] = useState(0);
   const successTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -71,6 +72,18 @@ export function ActivityListScreen({
       if (successTimer.current) clearTimeout(successTimer.current);
     };
   }, []);
+
+  // Block page scrolling (and rubber-banding on mobile) while the overlay plays.
+  useEffect(() => {
+    if (!showSuccess) return;
+    const { body } = document;
+    const previous = body.style.overflow;
+    body.style.overflow = "hidden";
+    return () => {
+      body.style.overflow = previous;
+    };
+  }, [showSuccess]);
+
 
   const items = useQuery({
     queryKey: [cacheKey, userId],
