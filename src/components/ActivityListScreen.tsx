@@ -102,9 +102,13 @@ export function ActivityListScreen({
       // before the animation state is set.
       if (successAnimation) {
         setShowSuccess(true);
+        // Remount the animation so every save replays it from the start.
+        setSuccessKey((value) => value + 1);
         if (successTimer.current) clearTimeout(successTimer.current);
-        successTimer.current = setTimeout(() => setShowSuccess(false), 4200);
+        // Safety net in case the animation never reports completion.
+        successTimer.current = setTimeout(() => setShowSuccess(false), 8000);
       }
+
       setMain("");
       setNote("");
       queryClient.setQueryData([cacheKey, userId], rows);
