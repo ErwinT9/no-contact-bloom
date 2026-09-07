@@ -50,12 +50,12 @@ export function ActivityListScreen({
   emptyText: string;
   illustration?: ReactNode;
   /**
-   * Optional Lottie/animation node shown centered on screen after a successful
-   * save. When provided, the success overlay is rendered for a few seconds on
-   * every successful add. Only pass this from features that want it (e.g. the
-   * Daily Journal), leaving all other consumers untouched.
+   * Optional Lottie/animation renderer shown centered on screen after a
+   * successful save. When provided, a full-screen overlay is rendered on every
+   * successful add and dismissed as soon as the animation reports completion.
    */
-  successAnimation?: ReactNode;
+  successAnimation?: (options: { onComplete: () => void }) => ReactNode;
+
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
