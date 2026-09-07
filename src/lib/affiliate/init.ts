@@ -22,6 +22,9 @@ export async function initializeInsertAffiliate(): Promise<void> {
   initPromise = InsertAffiliate.initialize(INSERT_AFFILIATE_COMPANY_CODE, true)
     .then(() => {
       console.log("[insert-affiliate] SDK initialized");
+      // Push affiliate attribution into RevenueCat as soon as it is known.
+      watchAffiliateForRevenueCat();
+      void syncAffiliateToRevenueCat();
     })
     .catch((error) => {
       console.error("[insert-affiliate] SDK initialization failed", error);
