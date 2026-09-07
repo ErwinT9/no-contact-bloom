@@ -27,7 +27,7 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBarLaunch"
-            android:launchMode="singleTask"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             android:exported="true">
@@ -56,6 +56,14 @@
                 <data
                     android:scheme="com.nocontacttracker.app"
                     android:host="reset-password" />
+            </intent-filter>
+
+            <!-- Insert Affiliate App Links (https://insertaffiliate.link) -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="insertaffiliate.link" />
             </intent-filter>
 
         </activity>
