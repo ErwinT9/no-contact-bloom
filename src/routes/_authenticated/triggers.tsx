@@ -6,8 +6,8 @@ import { ActivityListScreen } from "@/components/ActivityListScreen";
 import { TriggersIllustration } from "@/components/illustrations";
 import { triggerRepo } from "@/data/repository";
 
-const importTriggerSuccessAnimation = () => import("@/components/TriggerSuccessAnimation");
-const TriggerSuccessAnimation = lazy(importTriggerSuccessAnimation);
+const importSuccessAnimation = () => import("@/components/SuccessLottieAnimation");
+const SuccessLottieAnimation = lazy(importSuccessAnimation);
 
 export const Route = createFileRoute("/_authenticated/triggers")({
   head: () => ({
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/triggers")({
     const { t } = useTranslation();
     // Warm the animation chunk so the overlay shows instantly on the first save.
     useEffect(() => {
-      void importTriggerSuccessAnimation().catch(() => {});
+      void importSuccessAnimation().catch(() => {});
     }, []);
     return (
       <ActivityListScreen
@@ -37,11 +37,11 @@ export const Route = createFileRoute("/_authenticated/triggers")({
         notePlaceholder={t("triggers.notePlaceholder")}
         suggestions={t("triggers.suggestions", { returnObjects: true }) as string[]}
         emptyText={t("triggers.emptyText")}
-        successAnimation={
+        successAnimation={({ onComplete }) => (
           <Suspense fallback={null}>
-            <TriggerSuccessAnimation />
+            <SuccessLottieAnimation onComplete={onComplete} />
           </Suspense>
-        }
+        )}
       />
     );
   },

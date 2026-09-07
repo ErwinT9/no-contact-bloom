@@ -6,8 +6,8 @@ import { ActivityListScreen } from "@/components/ActivityListScreen";
 import { JournalIllustration } from "@/components/illustrations";
 import { journalRepo } from "@/data/repository";
 
-const importJournalSuccessAnimation = () => import("@/components/JournalSuccessAnimation");
-const JournalSuccessAnimation = lazy(importJournalSuccessAnimation);
+const importSuccessAnimation = () => import("@/components/SuccessLottieAnimation");
+const SuccessLottieAnimation = lazy(importSuccessAnimation);
 
 export const Route = createFileRoute("/_authenticated/journal")({
   head: () => ({
@@ -22,7 +22,7 @@ export const Route = createFileRoute("/_authenticated/journal")({
     const { t } = useTranslation();
     // Warm the animation chunk so the overlay shows instantly on the first save.
     useEffect(() => {
-      void importJournalSuccessAnimation().catch(() => {});
+      void importSuccessAnimation().catch(() => {});
     }, []);
     return (
       <ActivityListScreen
@@ -37,11 +37,11 @@ export const Route = createFileRoute("/_authenticated/journal")({
         notePlaceholder={t("journal.notePlaceholder")}
         multiline
         emptyText={t("journal.emptyText")}
-        successAnimation={
+        successAnimation={({ onComplete }) => (
           <Suspense fallback={null}>
-            <JournalSuccessAnimation />
+            <SuccessLottieAnimation onComplete={onComplete} />
           </Suspense>
-        }
+        )}
       />
     );
   },
