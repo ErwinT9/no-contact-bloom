@@ -246,6 +246,13 @@ function toOfferingPackage(pkg: any): OfferingPackage {
     kind,
     title: kind === "yearly" ? "Yearly" : kind === "weekly" ? "Weekly" : (product.title ?? id),
     priceString: String(product.priceString ?? ""),
+    price: (() => {
+      const raw =
+        product.price ??
+        (product.priceAmountMicros != null ? Number(product.priceAmountMicros) / 1_000_000 : null);
+      const num = Number(raw);
+      return Number.isFinite(num) && num > 0 ? num : null;
+    })(),
     currencyCode: String(product.currencyCode ?? ""),
     period,
     trial: trial ? `${trial} free` : null,
