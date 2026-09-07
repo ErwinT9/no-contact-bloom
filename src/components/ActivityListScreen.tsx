@@ -187,10 +187,8 @@ export function ActivityListScreen({
               {suggestion}
             </button>
           ))}
-        </div>,
-            document.body,
-          )
-        : null}
+        </div>
+      ) : null}
 
       <ul className="mt-5 space-y-3">
         {list.length === 0 ? (
