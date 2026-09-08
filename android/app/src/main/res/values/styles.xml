@@ -37,13 +37,22 @@
     </style>
 
     <!--
-      Launch (splash) theme. postSplashScreenTheme is critical: without it the
-      activity keeps this theme after the splash is dismissed, leaving
-      @drawable/splash as the window background. Under edge-to-edge that
-      drawable showed through as a white bar with splash/logo remnants.
+      Launch (splash) theme, cold start only.
+
+      The old @drawable/splash (white canvas + legacy leaf-heart logo) is gone:
+      as `android:background` it became the *window* background and therefore
+      re-appeared whenever the window repainted ahead of the WebView — most
+      visibly when resuming the app from recents. The cold-start splash now
+      uses the DayNight window colour plus the launcher icon, so there is no
+      stale bitmap attached to the window and nothing to flash on resume.
+
+      postSplashScreenTheme swaps the activity to AppTheme.NoActionBar as soon
+      as the splash is dismissed (MainActivity also sets it defensively).
     -->
     <style name="AppTheme.NoActionBarLaunch" parent="Theme.SplashScreen">
-        <item name="android:background">@drawable/splash</item>
+        <item name="windowSplashScreenBackground">@color/appWindowBackground</item>
+        <item name="windowSplashScreenAnimatedIcon">@mipmap/ic_launcher</item>
+        <item name="android:windowBackground">@color/appWindowBackground</item>
         <item name="postSplashScreenTheme">@style/AppTheme.NoActionBar</item>
     </style>
 </resources>
