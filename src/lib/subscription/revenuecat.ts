@@ -1,5 +1,5 @@
 import { analytics } from "@/lib/analytics";
-import { syncAffiliateToRevenueCat } from "@/lib/affiliate/revenuecat";
+
 import { isNative, platformName, safeNative } from "@/lib/native/platform";
 import { STORAGE_KEYS, storage } from "@/lib/native/storage";
 import { rcLog, rcLogError } from "@/lib/subscription/rcDebug";
@@ -329,8 +329,6 @@ export async function purchasePackageById(packageId: string): Promise<PurchaseOu
   if (!isNative()) return { status: "unavailable" };
   try {
     await configureRevenueCat();
-    // Attribution must be attached to the RevenueCat customer before purchase.
-    await syncAffiliateToRevenueCat();
     const { Purchases } = await rc();
     const offerings = await Purchases.getOfferings();
     const current = offerings.current ?? offerings.all?.["default"] ?? null;
@@ -359,8 +357,6 @@ export async function presentPaywall(): Promise<PurchaseOutcome> {
   if (!isNative()) return { status: "unavailable" };
   try {
     await configureRevenueCat();
-    // Attribution must be attached to the RevenueCat customer before purchase.
-    await syncAffiliateToRevenueCat();
     const { Purchases } = await rc();
     const offerings = await Purchases.getOfferings();
     const pkg = offerings.current?.availablePackages?.[0];
