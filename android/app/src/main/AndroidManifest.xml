@@ -58,13 +58,6 @@
                     android:host="reset-password" />
             </intent-filter>
 
-            <!-- Insert Affiliate App Links (https://insertaffiliate.link) -->
-            <intent-filter android:autoVerify="true">
-                <action android:name="android.intent.action.VIEW" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="insertaffiliate.link" />
-            </intent-filter>
 
         </activity>
 
