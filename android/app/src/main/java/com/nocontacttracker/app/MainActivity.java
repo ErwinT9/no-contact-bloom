@@ -15,6 +15,13 @@ public class MainActivity extends BridgeActivity {
         registerPlugin(SystemBarsPlugin.class);
         super.onCreate(savedInstanceState);
 
+        // Defensive: guarantee the activity runs under the real app theme once
+        // created, so the window background is the DayNight colour and never a
+        // launch-splash drawable. Without this, a lingering launch theme
+        // repaints its background on resume from recents (the old white +
+        // leaf-logo flash).
+        setTheme(R.style.AppTheme_NoActionBar);
+
         // Edge-to-edge on every supported Android version (not just 15+, where
         // the platform enforces it). Modern AndroidX API only: no deprecated
         // statusBarColor / navigationBarColor / SYSTEM_UI_FLAG_* and no

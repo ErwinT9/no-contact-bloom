@@ -23,8 +23,8 @@ const config: CapacitorConfig = {
       launchAutoHide: true,
       launchShowDuration: 3000,
       launchFadeOutDuration: 200,
-      backgroundColor: "#FFFFFF",
-      androidScaleType: "CENTER_CROP",
+      // No hardcoded colour: the cold-start splash inherits the DayNight
+      // windowSplashScreenBackground so light/dark both look right.
       showSpinner: false,
     },
     LocalNotifications: {
