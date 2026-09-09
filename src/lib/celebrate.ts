@@ -116,9 +116,11 @@ export async function celebrate(): Promise<void> {
     try {
       modulePromise ??= import("canvas-confetti") as unknown as Promise<ConfettiModule>;
       const mod = await modulePromise;
-      const fire = ensureInstance(mod.default);
+      const worker = canUseWorker();
+      const fire = ensureInstance(mod.default, worker);
+      safetyTimer = setTimeout(teardown, MAX_DURATION_MS);
       await fire({
-        particleCount: particleCount(),
+        particleCount: particleCount(worker),
         spread: 78,
         startVelocity: 38,
         origin: { y: 0.7 },
@@ -129,9 +131,9 @@ export async function celebrate(): Promise<void> {
       /* confetti is decorative only */
     } finally {
       teardown();
-      inFlight = null;
     }
   })();
 
   return inFlight;
 }
+
