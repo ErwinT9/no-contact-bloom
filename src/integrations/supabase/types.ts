@@ -158,6 +158,48 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_exercise_sessions: {
+        Row: {
+          completed_at: string | null
+          completed_steps: number
+          created_at: string
+          id: string
+          local_date: string
+          session_id: string
+          session_title: string
+          status: string
+          total_steps: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          completed_at?: string | null
+          completed_steps?: number
+          created_at?: string
+          id?: string
+          local_date: string
+          session_id: string
+          session_title: string
+          status?: string
+          total_steps?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          completed_at?: string | null
+          completed_steps?: number
+          created_at?: string
+          id?: string
+          local_date?: string
+          session_id?: string
+          session_title?: string
+          status?: string
+          total_steps?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       daily_promises: {
         Row: {
           created_at: string
