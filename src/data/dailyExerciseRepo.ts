@@ -6,18 +6,18 @@
  * survive an app restart with no connection. Completed days are appended to a
  * local history that never overwrites earlier days.
  *
- * Cloud sync: the `daily_exercise_sessions` table is not part of the current
- * database schema, so pushing rows is gated behind CLOUD_SYNC_ENABLED. Once the
- * table exists, flipping the flag is the only change needed — the payload built
- * below is already the row shape, and it goes through the normal offline sync
- * queue.
+ * Cloud sync: completed days are pushed to the user-scoped
+ * `daily_exercise_sessions` table through the normal offline sync queue, so an
+ * offline completion is uploaded as soon as connectivity returns. The row is
+ * keyed by (user_id, local_date), so re-syncing the same day updates instead of
+ * duplicating.
  */
+import { supabase } from "@/integrations/supabase/client";
 import { localDayKey } from "@/data/repository";
 import { EXERCISE_SESSIONS, orderedSteps, sessionById } from "@/lib/dailyExercise/content";
 import { STORAGE_KEYS, storage } from "@/lib/native/storage";
+import { isOnline } from "@/lib/offline/network";
 import { enqueue } from "@/lib/offline/syncQueue";
-
-const CLOUD_SYNC_ENABLED = false;
 
 export type DailyExerciseState = {
   local_date: string;
@@ -87,9 +87,48 @@ function freshState(sessionId: string, date: string): DailyExerciseState {
 }
 
 export const dailyExerciseRepo = {
+  /**
+   * Device history is the source of truth for rendering; when online, cloud rows
+   * are merged in (by local_date) so a reinstall or second device still sees
+   * previously completed days.
+   */
   async history(userId: string): Promise<DailyExerciseRecord[]> {
-    const list = await storage.get<DailyExerciseRecord[]>(historyKey(userId), []);
-    return [...list].sort((a, b) => b.local_date.localeCompare(a.local_date));
+    const local = await storage.get<DailyExerciseRecord[]>(historyKey(userId), []);
+    let merged = local;
+
+    if (isOnline()) {
+      try {
+        const { data, error } = await supabase
+          .from("daily_exercise_sessions")
+          .select("*")
+          .eq("user_id", userId);
+        if (!error && data) {
+          const byDate = new Map<string, DailyExerciseRecord>();
+          for (const row of data) {
+            byDate.set(row.local_date, {
+              id: row.id,
+              user_id: row.user_id,
+              local_date: row.local_date,
+              session_id: row.session_id,
+              session_title: row.session_title,
+              completed_steps: row.completed_steps,
+              total_steps: row.total_steps,
+              status: "completed",
+              completed_at: row.completed_at ?? row.created_at,
+              created_at: row.created_at,
+            });
+          }
+          // Local wins on conflict: it can be newer than what has synced.
+          for (const row of local) byDate.set(row.local_date, row);
+          merged = [...byDate.values()];
+          await storage.set(historyKey(userId), merged);
+        }
+      } catch {
+        // Offline-first: a failed read never breaks the local history.
+      }
+    }
+
+    return [...merged].sort((a, b) => b.local_date.localeCompare(a.local_date));
   },
 
   /**
@@ -179,15 +218,13 @@ export const dailyExerciseRepo = {
     const merged = [record, ...history.filter((row) => row.local_date !== record.local_date)];
     await storage.set(historyKey(userId), merged);
 
-    if (CLOUD_SYNC_ENABLED) {
-      await enqueue({
-        id: record.id,
-        table: "daily_exercise_sessions" as never,
-        op: "upsert",
-        payload: { ...record, updated_at: completedAt },
-        onConflict: "user_id,local_date",
-      });
-    }
+    await enqueue({
+      id: record.id,
+      table: "daily_exercise_sessions",
+      op: "upsert",
+      payload: { ...record, updated_at: completedAt },
+      onConflict: "user_id,local_date",
+    });
     return next;
   },
 };
