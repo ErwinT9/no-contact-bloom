@@ -2,6 +2,7 @@ import { App } from "@capacitor/app";
 import { Browser } from "@capacitor/browser";
 
 import { supabase } from "@/integrations/supabase/client";
+import { handleDriveDeepLink } from "@/lib/drive/client";
 import { isNative } from "@/lib/native/platform";
 import { goToResetPassword, isRecoveryUrl, setRecoveryActive } from "@/lib/auth/passwordRecovery";
 
@@ -100,6 +101,8 @@ export function initNativeOAuthListeners() {
 
   void App.addListener("appUrlOpen", (event) => {
     if (!event.url?.startsWith("com.nocontacttracker.app://")) return;
+    // Google Drive authorization returns on its own host and is handled there.
+    if (handleDriveDeepLink(event.url)) return;
     void completeNativeOAuth(event.url);
   });
 

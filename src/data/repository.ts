@@ -458,6 +458,9 @@ export const pictureRepo = listRepo<Picture>("pictures", "pictures", () => ({
   image_url: "",
   caption: null,
   taken_on: localDayKey(),
+  storage_kind: "drive" as const,
+  drive_file_id: null,
+  drive_web_link: null,
 }));
 
 export const affirmationRepo = listRepo<Affirmation>("affirmations", "affirmations", () => ({
