@@ -22,6 +22,7 @@ import { Route as AuthenticatedBadgesRouteImport } from './routes/_authenticated
 import { Route as AuthenticatedChangeEmailRouteImport } from './routes/_authenticated/change-email'
 import { Route as AuthenticatedChangePasswordRouteImport } from './routes/_authenticated/change-password'
 import { Route as AuthenticatedCheckInRouteImport } from './routes/_authenticated/check-in'
+import { Route as AuthenticatedDailyExerciseRouteImport } from './routes/_authenticated/daily-exercise'
 import { Route as AuthenticatedFlagsRouteImport } from './routes/_authenticated/flags'
 import { Route as AuthenticatedHealingToolsRouteImport } from './routes/_authenticated/healing-tools'
 import { Route as AuthenticatedHomeRouteImport } from './routes/_authenticated/home'
@@ -116,6 +117,12 @@ const AuthenticatedCheckInRoute = AuthenticatedCheckInRouteImport.update({
   path: '/check-in',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedDailyExerciseRoute =
+  AuthenticatedDailyExerciseRouteImport.update({
+    id: '/daily-exercise',
+    path: '/daily-exercise',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedFlagsRoute = AuthenticatedFlagsRouteImport.update({
   id: '/flags',
   path: '/flags',
@@ -276,6 +283,7 @@ export interface FileRoutesByFullPath {
   '/change-email': typeof AuthenticatedChangeEmailRoute
   '/change-password': typeof AuthenticatedChangePasswordRoute
   '/check-in': typeof AuthenticatedCheckInRoute
+  '/daily-exercise': typeof AuthenticatedDailyExerciseRoute
   '/flags': typeof AuthenticatedFlagsRoute
   '/healing-tools': typeof AuthenticatedHealingToolsRoute
   '/home': typeof AuthenticatedHomeRoute
@@ -316,6 +324,7 @@ export interface FileRoutesByTo {
   '/change-email': typeof AuthenticatedChangeEmailRoute
   '/change-password': typeof AuthenticatedChangePasswordRoute
   '/check-in': typeof AuthenticatedCheckInRoute
+  '/daily-exercise': typeof AuthenticatedDailyExerciseRoute
   '/flags': typeof AuthenticatedFlagsRoute
   '/healing-tools': typeof AuthenticatedHealingToolsRoute
   '/home': typeof AuthenticatedHomeRoute
@@ -358,6 +367,7 @@ export interface FileRoutesById {
   '/_authenticated/change-email': typeof AuthenticatedChangeEmailRoute
   '/_authenticated/change-password': typeof AuthenticatedChangePasswordRoute
   '/_authenticated/check-in': typeof AuthenticatedCheckInRoute
+  '/_authenticated/daily-exercise': typeof AuthenticatedDailyExerciseRoute
   '/_authenticated/flags': typeof AuthenticatedFlagsRoute
   '/_authenticated/healing-tools': typeof AuthenticatedHealingToolsRoute
   '/_authenticated/home': typeof AuthenticatedHomeRoute
@@ -400,6 +410,7 @@ export interface FileRouteTypes {
     | '/change-email'
     | '/change-password'
     | '/check-in'
+    | '/daily-exercise'
     | '/flags'
     | '/healing-tools'
     | '/home'
@@ -440,6 +451,7 @@ export interface FileRouteTypes {
     | '/change-email'
     | '/change-password'
     | '/check-in'
+    | '/daily-exercise'
     | '/flags'
     | '/healing-tools'
     | '/home'
@@ -481,6 +493,7 @@ export interface FileRouteTypes {
     | '/_authenticated/change-email'
     | '/_authenticated/change-password'
     | '/_authenticated/check-in'
+    | '/_authenticated/daily-exercise'
     | '/_authenticated/flags'
     | '/_authenticated/healing-tools'
     | '/_authenticated/home'
@@ -611,6 +624,13 @@ declare module '@tanstack/react-router' {
       path: '/check-in'
       fullPath: '/check-in'
       preLoaderRoute: typeof AuthenticatedCheckInRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/daily-exercise': {
+      id: '/_authenticated/daily-exercise'
+      path: '/daily-exercise'
+      fullPath: '/daily-exercise'
+      preLoaderRoute: typeof AuthenticatedDailyExerciseRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/flags': {
@@ -805,6 +825,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedChangeEmailRoute: typeof AuthenticatedChangeEmailRoute
   AuthenticatedChangePasswordRoute: typeof AuthenticatedChangePasswordRoute
   AuthenticatedCheckInRoute: typeof AuthenticatedCheckInRoute
+  AuthenticatedDailyExerciseRoute: typeof AuthenticatedDailyExerciseRoute
   AuthenticatedFlagsRoute: typeof AuthenticatedFlagsRoute
   AuthenticatedHealingToolsRoute: typeof AuthenticatedHealingToolsRoute
   AuthenticatedHomeRoute: typeof AuthenticatedHomeRoute
@@ -839,6 +860,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedChangeEmailRoute: AuthenticatedChangeEmailRoute,
   AuthenticatedChangePasswordRoute: AuthenticatedChangePasswordRoute,
   AuthenticatedCheckInRoute: AuthenticatedCheckInRoute,
+  AuthenticatedDailyExerciseRoute: AuthenticatedDailyExerciseRoute,
   AuthenticatedFlagsRoute: AuthenticatedFlagsRoute,
   AuthenticatedHealingToolsRoute: AuthenticatedHealingToolsRoute,
   AuthenticatedHomeRoute: AuthenticatedHomeRoute,

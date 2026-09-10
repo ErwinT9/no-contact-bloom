@@ -13,6 +13,7 @@ import { toast } from "sonner";
 import { useTranslation } from "react-i18next";
 
 import { AppShell } from "@/components/AppShell";
+import { DailyExerciseCard } from "@/components/DailyExerciseCard";
 import { SoftCard } from "@/components/SoftCard";
 import { Button } from "@/components/ui/button";
 import {
@@ -177,6 +178,10 @@ function Activity() {
           </span>
         </span>
       </Link>
+
+      <div className="mt-3">
+        <DailyExerciseCard />
+      </div>
 
       <Link
         to="/healing-tools"

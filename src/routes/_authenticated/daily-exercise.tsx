@@ -299,7 +299,7 @@ function DailyExerciseScreen() {
           const locked = !done && !isCurrent;
           return (
             <li key={step.order}>
-              <SoftCard className={locked ? "opacity-60" : undefined}>
+              <SoftCard className={locked ? "opacity-60" : ""}>
                 <div className="flex items-start gap-3">
                   <StepBadge done={done} locked={locked} index={index + 1} />
                   <div className="min-w-0 flex-1">
