@@ -23,7 +23,8 @@ export type SyncTable =
   | "worry_entries"
   | "gratitude_entries"
   | "journey_progress"
-  | "journey_levels";
+  | "journey_levels"
+  | "daily_exercise_sessions";
 
 export type QueueItem = {
   id: string;

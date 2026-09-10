@@ -6,18 +6,18 @@
  * survive an app restart with no connection. Completed days are appended to a
  * local history that never overwrites earlier days.
  *
- * Cloud sync: the `daily_exercise_sessions` table is not part of the current
- * database schema, so pushing rows is gated behind CLOUD_SYNC_ENABLED. Once the
- * table exists, flipping the flag is the only change needed — the payload built
- * below is already the row shape, and it goes through the normal offline sync
- * queue.
+ * Cloud sync: completed days are pushed to the user-scoped
+ * `daily_exercise_sessions` table through the normal offline sync queue, so an
+ * offline completion is uploaded as soon as connectivity returns. The row is
+ * keyed by (user_id, local_date), so re-syncing the same day updates instead of
+ * duplicating.
  */
+import { supabase } from "@/integrations/supabase/client";
 import { localDayKey } from "@/data/repository";
 import { EXERCISE_SESSIONS, orderedSteps, sessionById } from "@/lib/dailyExercise/content";
 import { STORAGE_KEYS, storage } from "@/lib/native/storage";
+import { isOnline } from "@/lib/offline/network";
 import { enqueue } from "@/lib/offline/syncQueue";
-
-const CLOUD_SYNC_ENABLED = false;
 
 export type DailyExerciseState = {
   local_date: string;
