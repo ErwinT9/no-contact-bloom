@@ -84,10 +84,15 @@ export type DailyPromise = {
 export type Picture = {
   id: string;
   user_id: string;
+  /** Legacy Supabase Storage path; empty for Drive-backed pictures. */
   image_url: string;
   caption: string | null;
   taken_on: string;
   created_at: string;
+  /** Where the image file lives. New pictures are always "drive". */
+  storage_kind: "supabase" | "drive";
+  drive_file_id: string | null;
+  drive_web_link: string | null;
 };
 
 export type Affirmation = {

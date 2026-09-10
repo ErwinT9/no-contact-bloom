@@ -71,6 +71,33 @@ export type Database = {
         }
         Relationships: []
       }
+      app_user_connections: {
+        Row: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at: string
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          connection_key_ciphertext: string
+          connector_id: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          connection_key_ciphertext?: string
+          connector_id?: string
+          created_at?: string
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       badges: {
         Row: {
           badge_key: string
@@ -685,8 +712,11 @@ export type Database = {
         Row: {
           caption: string | null
           created_at: string
+          drive_file_id: string | null
+          drive_web_link: string | null
           id: string
           image_url: string
+          storage_kind: string
           taken_on: string
           updated_at: string
           user_id: string
@@ -694,8 +724,11 @@ export type Database = {
         Insert: {
           caption?: string | null
           created_at?: string
+          drive_file_id?: string | null
+          drive_web_link?: string | null
           id?: string
           image_url: string
+          storage_kind?: string
           taken_on?: string
           updated_at?: string
           user_id: string
@@ -703,8 +736,11 @@ export type Database = {
         Update: {
           caption?: string | null
           created_at?: string
+          drive_file_id?: string | null
+          drive_web_link?: string | null
           id?: string
           image_url?: string
+          storage_kind?: string
           taken_on?: string
           updated_at?: string
           user_id?: string

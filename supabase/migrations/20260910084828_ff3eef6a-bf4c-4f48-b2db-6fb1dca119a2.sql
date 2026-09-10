@@ -1,0 +1,24 @@
+CREATE TABLE public.app_user_connections (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id uuid NOT NULL,
+  connector_id text NOT NULL,
+  connection_key_ciphertext text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now(),
+  updated_at timestamptz NOT NULL DEFAULT now(),
+  UNIQUE (user_id, connector_id)
+);
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON public.app_user_connections TO service_role;
+ALTER TABLE public.app_user_connections ENABLE ROW LEVEL SECURITY;
+
+CREATE TRIGGER app_user_connections_updated_at
+BEFORE UPDATE ON public.app_user_connections
+FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+
+ALTER TABLE public.pictures
+  ADD COLUMN storage_kind text NOT NULL DEFAULT 'supabase',
+  ADD COLUMN drive_file_id text,
+  ADD COLUMN drive_web_link text;
+
+ALTER TABLE public.pictures
+  ADD CONSTRAINT pictures_storage_kind_check CHECK (storage_kind IN ('supabase', 'drive'));
