@@ -21,7 +21,7 @@ import { isNative } from "@/lib/native/platform";
 import { pickImageSource } from "@/lib/avatar";
 import { connectGoogleDrive, drive } from "@/lib/drive/client";
 import { fileToDataUrl, toPictureDataUrl } from "@/lib/drive/image";
-import { openExternal } from "@/lib/openExternal";
+import { openExternalUrl } from "@/lib/openExternal";
 
 const BUCKET = "activity-pictures";
 
@@ -379,7 +379,7 @@ function Pictures() {
                 <Button
                   variant="secondary"
                   className="press h-11 flex-1 rounded-2xl"
-                  onClick={() => void openExternal(openPicture.drive_web_link!)}
+                  onClick={() => void openExternalUrl(openPicture.drive_web_link!)}
                 >
                   <ExternalLink className="mr-2 size-4" aria-hidden />
                   {t("pictures.openInDrive")}
