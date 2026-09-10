@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { AppShell } from "@/components/AppShell";
 import { Crown } from "lucide-react";
 import { useSubscription } from "@/hooks/useSubscription";
+import { DailyExerciseCard } from "@/components/DailyExerciseCard";
 import { DailyTasks } from "@/components/DailyTasks";
 import { FireflyJar } from "@/components/FireflyJar";
 import { HealingProgress } from "@/components/HealingProgress";
@@ -256,6 +257,8 @@ function HomeScreen() {
         <HealingProgress startedAt={startedAt} bestDays={streak.data?.best_days ?? 0} />
 
         <DailyTasks />
+
+        <DailyExerciseCard />
 
         <Link to="/motivation" className="press block">
           <SoftCard className="flex items-center gap-4">

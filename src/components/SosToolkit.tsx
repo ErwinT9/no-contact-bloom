@@ -34,9 +34,12 @@ function useCountdown(seconds: number, active: boolean) {
 export function SosToolkit({
   open,
   onOpenChange,
+  initialTool,
 }: {
   open: boolean;
   onOpenChange: (next: boolean) => void;
+  /** Optional deep-open, used by the Daily Guided Exercise mapping layer. */
+  initialTool?: Tool;
 }) {
   const { t } = useTranslation();
   const { user } = useAuth();
@@ -80,13 +83,13 @@ export function SosToolkit({
 
   useEffect(() => {
     if (open) {
-      setTool("menu");
+      setTool(initialTool ?? "menu");
       analytics.track("sos_opened");
       void sosEncouragement();
       activity.sosOpened();
       activity.featureUsed("sos");
     }
-  }, [open]);
+  }, [open, initialTool]);
 
   const flags = useQuery({
     queryKey: ["flags", userId],

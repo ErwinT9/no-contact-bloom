@@ -1,0 +1,679 @@
+{
+  "version": 1,
+  "feature": "Daily Guided Exercise",
+  "selection_mode": "curated_sessions",
+  "sessions": [
+    {
+      "id": "understand_your_emotions",
+      "title": "Understand Your Emotions",
+      "category": "Understanding Yourself",
+      "estimated_minutes": 5,
+      "purpose": "Today's session will help you understand what's behind your emotions and create some distance from the breakup.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in with yourself",
+          "instruction": "How are you feeling right now?",
+          "why": "Start by noticing what you are feeling instead of pushing it away.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Identify the trigger",
+          "instruction": "What situation, thought, or memory may have triggered this feeling?",
+          "why": "Knowing what triggered you can make the emotion easier to understand and manage.",
+          "feature": "triggers"
+        },
+        {
+          "order": 3,
+          "title": "Put it into words",
+          "instruction": "Write about what is going through your mind right now.",
+          "why": "Putting your thoughts into words can create some distance from them.",
+          "feature": "journal"
+        },
+        {
+          "order": 4,
+          "title": "Remember what you know",
+          "instruction": "Take a moment to revisit the relationship red flags you recorded.",
+          "why": "When emotions are strong, remembering the full picture can help you stay grounded.",
+          "feature": "red_flags"
+        },
+        {
+          "order": 5,
+          "title": "Notice one thing you handled well",
+          "instruction": "Record one small win from today.",
+          "why": "Progress is built by noticing the moments when you choose yourself.",
+          "feature": "wins"
+        }
+      ],
+      "completion": {
+        "title": "You showed up for yourself today. ❤️",
+        "message": "You took time to understand what you are feeling instead of letting the feeling control you."
+      }
+    },
+    {
+      "id": "handle_the_urge",
+      "title": "Handle the Urge",
+      "category": "Handling Urges",
+      "estimated_minutes": 6,
+      "purpose": "This session gives you a simple path to move through the urge to contact your ex without acting on it.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in with yourself",
+          "instruction": "How strong is the urge and what are you feeling right now?",
+          "why": "Naming the emotion and intensity gives you a starting point.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Find the trigger",
+          "instruction": "What caused you to want to reach out?",
+          "why": "An urge usually has a trigger. Identifying it helps you separate the trigger from the action.",
+          "feature": "triggers"
+        },
+        {
+          "order": 3,
+          "title": "Come back to the present",
+          "instruction": "Use 5-4-3-2-1 grounding to reconnect with what is happening right now.",
+          "why": "Grounding can interrupt the spiral and bring your attention back to the present moment.",
+          "feature": "grounding"
+        },
+        {
+          "order": 4,
+          "title": "Remember your progress",
+          "instruction": "Read through your recorded wins.",
+          "why": "Reminding yourself of times you chose yourself reinforces the progress you have already made.",
+          "feature": "reading_wins"
+        },
+        {
+          "order": 5,
+          "title": "Fight the urge",
+          "instruction": "Use Fight the Urge before making any decision about contacting your ex.",
+          "why": "Give yourself space between the urge and the action.",
+          "feature": "fight_the_urge"
+        }
+      ],
+      "completion": {
+        "title": "You rode out the urge. 🔥",
+        "message": "You gave yourself space instead of letting a difficult moment decide what happens next."
+      }
+    },
+    {
+      "id": "create_emotional_space",
+      "title": "Create Emotional Space",
+      "category": "Calming Down",
+      "estimated_minutes": 6,
+      "purpose": "Today's session helps you get anxious thoughts out of your head and create a little room to breathe.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Notice what is weighing on you",
+          "instruction": "Check in with your current mood.",
+          "why": "Start by acknowledging your emotional state without judging it.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Set the worry down",
+          "instruction": "Put the worry or anxious thought into your Worry Box.",
+          "why": "You do not have to solve every thought the moment it appears.",
+          "feature": "worry_box"
+        },
+        {
+          "order": 3,
+          "title": "Slow things down",
+          "instruction": "Complete a breathing exercise.",
+          "why": "Give yourself a deliberate pause before returning to the rest of your day.",
+          "feature": "breathing"
+        },
+        {
+          "order": 4,
+          "title": "Say what you wish you could say",
+          "instruction": "Write an unsent letter to your ex.",
+          "why": "Expressing the words privately can be different from acting on them.",
+          "feature": "unsent_letters"
+        },
+        {
+          "order": 5,
+          "title": "Shift your attention",
+          "instruction": "Add something you're grateful for.",
+          "why": "End the session by deliberately noticing something positive that still exists in your life.",
+          "feature": "gratitude_jar"
+        }
+      ],
+      "completion": {
+        "title": "You made some space today. 🌱",
+        "message": "You gave your thoughts somewhere to go without giving them control over your actions."
+      }
+    },
+    {
+      "id": "stop_romanticizing_the_past",
+      "title": "Stop Romanticizing the Past",
+      "category": "Relationship Reflection",
+      "estimated_minutes": 5,
+      "purpose": "When you miss someone, it is easy to remember only the best moments. This session helps you look at the relationship as a whole.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Notice how you are feeling",
+          "instruction": "Check in with your mood before reflecting.",
+          "why": "Strong emotions can influence which memories come to mind first.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Look at the full picture",
+          "instruction": "Read the red flags you recorded during the relationship.",
+          "why": "Revisiting the difficult parts can balance an idealized version of the past.",
+          "feature": "red_flags"
+        },
+        {
+          "order": 3,
+          "title": "Write what you are remembering",
+          "instruction": "Journal about what you miss and what you do not miss.",
+          "why": "Separating the good memories from the reality of the relationship can bring clarity.",
+          "feature": "journal"
+        },
+        {
+          "order": 4,
+          "title": "Remember what you survived",
+          "instruction": "Read your recorded wins.",
+          "why": "Your own progress is part of the story too.",
+          "feature": "reading_wins"
+        },
+        {
+          "order": 5,
+          "title": "Choose your next step",
+          "instruction": "Read today's Daily Motivation.",
+          "why": "Finish by bringing your attention back to healing rather than the past.",
+          "feature": "daily_motivation"
+        }
+      ],
+      "completion": {
+        "title": "You looked at the whole picture. ❤️",
+        "message": "Missing someone does not erase what happened or the reasons you chose to heal."
+      }
+    },
+    {
+      "id": "understand_relationship_patterns",
+      "title": "Understand Your Relationship Patterns",
+      "category": "Relationship Reflection",
+      "estimated_minutes": 7,
+      "purpose": "Today's session helps you reflect on recurring situations and behaviors so you can learn from the relationship.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Start with how you feel",
+          "instruction": "Check in with yourself.",
+          "why": "Reflection works best when you first recognize your current emotional state.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Spot what set things off",
+          "instruction": "Review or log situations that repeatedly triggered difficult emotions.",
+          "why": "Patterns become easier to see when you identify the situations that kept repeating.",
+          "feature": "triggers"
+        },
+        {
+          "order": 3,
+          "title": "Look at the unhealthy patterns",
+          "instruction": "Review the red flags you recorded.",
+          "why": "Seeing repeated patterns can help you recognize what you do not want to repeat.",
+          "feature": "red_flags"
+        },
+        {
+          "order": 4,
+          "title": "Reflect on your part",
+          "instruction": "Journal about what you learned about yourself from the relationship.",
+          "why": "The goal is not blame. It is understanding what you can carry forward and what you can change.",
+          "feature": "journal"
+        },
+        {
+          "order": 5,
+          "title": "Build something different",
+          "instruction": "Work on a personal goal or routine that supports the person you want to become.",
+          "why": "Growth becomes real when reflection turns into a small change in your life.",
+          "feature": "goals_routines"
+        }
+      ],
+      "completion": {
+        "title": "You learned something about yourself. 🧠",
+        "message": "Understanding a pattern gives you the chance to make a different choice next time."
+      }
+    },
+    {
+      "id": "rebuild_your_confidence",
+      "title": "Rebuild Your Confidence",
+      "category": "Self-Improvement",
+      "estimated_minutes": 6,
+      "purpose": "A breakup can make you question yourself. This session helps you reconnect with your strengths and take one step forward.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in",
+          "instruction": "How are you feeling about yourself today?",
+          "why": "Notice where your confidence is right now without judging yourself.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Remember your wins",
+          "instruction": "Read the personal wins you have already recorded.",
+          "why": "Your breakup does not erase the things you have accomplished or the times you have chosen yourself.",
+          "feature": "reading_wins"
+        },
+        {
+          "order": 3,
+          "title": "Speak to yourself differently",
+          "instruction": "Complete an affirmation that feels meaningful today.",
+          "why": "Practice replacing harsh self-talk with a more supportive message.",
+          "feature": "affirmations"
+        },
+        {
+          "order": 4,
+          "title": "Choose one goal",
+          "instruction": "Work on a personal goal or routine.",
+          "why": "Confidence grows when you take action and keep promises to yourself.",
+          "feature": "goals_routines"
+        },
+        {
+          "order": 5,
+          "title": "Finish with encouragement",
+          "instruction": "Read today's Daily Motivation.",
+          "why": "End by reinforcing the decision to keep moving forward.",
+          "feature": "daily_motivation"
+        }
+      ],
+      "completion": {
+        "title": "You chose yourself today. 💪",
+        "message": "Confidence is rebuilt one small action at a time."
+      }
+    },
+    {
+      "id": "reconnect_with_yourself",
+      "title": "Reconnect With Yourself",
+      "category": "Identity & Growth",
+      "estimated_minutes": 8,
+      "purpose": "This session helps you shift some attention away from the relationship and back toward your own life.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in with yourself",
+          "instruction": "How are you feeling today?",
+          "why": "Start by making space for your own experience.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Remember who you are",
+          "instruction": "Journal about the interests, values, and parts of yourself you want to reconnect with.",
+          "why": "A relationship can become a big part of life without being your entire identity.",
+          "feature": "journal"
+        },
+        {
+          "order": 3,
+          "title": "Choose a supportive message",
+          "instruction": "Complete an affirmation that reflects the person you are becoming.",
+          "why": "Give yourself a reminder that your identity continues beyond the breakup.",
+          "feature": "affirmations"
+        },
+        {
+          "order": 4,
+          "title": "Build your routine",
+          "instruction": "Work on a goal or routine that is just for you.",
+          "why": "Creating structure helps turn self-reflection into forward movement.",
+          "feature": "goals_routines"
+        },
+        {
+          "order": 5,
+          "title": "Step outside",
+          "instruction": "Take an Outdoor Walk.",
+          "why": "Changing your environment can give you a simple reset and a break from repetitive thoughts.",
+          "feature": "outdoor_walk"
+        }
+      ],
+      "completion": {
+        "title": "You made space for yourself. 🌱",
+        "message": "Your life is still yours to build, one choice at a time."
+      }
+    },
+    {
+      "id": "let_it_out_without_sending",
+      "title": "Let It Out Without Sending It",
+      "category": "Emotional Release",
+      "estimated_minutes": 6,
+      "purpose": "Get the thoughts out without reopening the conversation. This session gives your emotions a private place to land.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Notice what is coming up",
+          "instruction": "Check in with your mood.",
+          "why": "Start by acknowledging the emotion before trying to release it.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Write what you want to say",
+          "instruction": "Write an unsent letter to your ex.",
+          "why": "You can express everything without turning the emotion into contact.",
+          "feature": "unsent_letters"
+        },
+        {
+          "order": 3,
+          "title": "Set the worry down",
+          "instruction": "Put any remaining anxious thought into the Worry Box.",
+          "why": "Not every thought needs an immediate answer.",
+          "feature": "worry_box"
+        },
+        {
+          "order": 4,
+          "title": "Breathe before moving on",
+          "instruction": "Complete a breathing exercise.",
+          "why": "Give yourself a calm transition after an emotionally intense reflection.",
+          "feature": "breathing"
+        },
+        {
+          "order": 5,
+          "title": "End with something positive",
+          "instruction": "Add one thing you're grateful for.",
+          "why": "Close the session by deliberately noticing something outside the breakup.",
+          "feature": "gratitude_jar"
+        }
+      ],
+      "completion": {
+        "title": "You released it without reaching out. ❤️",
+        "message": "You found a way to express yourself while protecting your healing."
+      }
+    },
+    {
+      "id": "when_you_miss_them",
+      "title": "When You Miss Them",
+      "category": "Handling Urges",
+      "estimated_minutes": 6,
+      "purpose": "Missing someone is not the same as needing them back. This session helps you understand the feeling before acting on it.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Name the feeling",
+          "instruction": "Check in with yourself.",
+          "why": "Start by separating the feeling of missing them from the decision to contact them.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Write what you miss",
+          "instruction": "Journal about what you are actually missing.",
+          "why": "You may be missing a person, a feeling, a routine, or a version of your life.",
+          "feature": "journal"
+        },
+        {
+          "order": 3,
+          "title": "Remember what was real",
+          "instruction": "Read the red flags you recorded.",
+          "why": "Missing the good parts should not make you forget the difficult parts.",
+          "feature": "reading_red_flags"
+        },
+        {
+          "order": 4,
+          "title": "Remember yourself",
+          "instruction": "Read your recorded wins.",
+          "why": "Reconnect with the progress you have made without contacting them.",
+          "feature": "reading_wins"
+        },
+        {
+          "order": 5,
+          "title": "Protect the progress",
+          "instruction": "Use Fight the Urge.",
+          "why": "Give yourself a chance to let the feeling pass before making a decision.",
+          "feature": "fight_the_urge"
+        }
+      ],
+      "completion": {
+        "title": "You let the feeling pass without acting on it. 🌱",
+        "message": "You can miss someone and still choose yourself."
+      }
+    },
+    {
+      "id": "reset_after_a_difficult_day",
+      "title": "Reset After a Difficult Day",
+      "category": "Calming Down",
+      "estimated_minutes": 7,
+      "purpose": "When today has been hard, use this short reset to calm your mind and give yourself a fresh start.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in",
+          "instruction": "Record how you are feeling after today.",
+          "why": "Acknowledging a difficult day is better than pretending it did not affect you.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Put the worries down",
+          "instruction": "Add the thoughts you keep replaying to the Worry Box.",
+          "why": "Give repetitive thoughts somewhere to go instead of carrying them into the rest of your evening.",
+          "feature": "worry_box"
+        },
+        {
+          "order": 3,
+          "title": "Slow your breathing",
+          "instruction": "Complete a breathing exercise.",
+          "why": "Create a deliberate pause before moving on from the day.",
+          "feature": "breathing"
+        },
+        {
+          "order": 4,
+          "title": "Listen and reflect",
+          "instruction": "Play a Healing Audio session.",
+          "why": "Give yourself a quieter space to process what happened today.",
+          "feature": "healing_audio"
+        },
+        {
+          "order": 5,
+          "title": "Take one positive thought with you",
+          "instruction": "Read today's Daily Motivation.",
+          "why": "Finish with a reminder that one difficult day does not define your journey.",
+          "feature": "daily_motivation"
+        }
+      ],
+      "completion": {
+        "title": "Today is allowed to be over. 🌙",
+        "message": "You made time to reset instead of carrying the whole day into tomorrow."
+      }
+    },
+    {
+      "id": "build_a_better_routine",
+      "title": "Build a Better Routine",
+      "category": "Self-Improvement",
+      "estimated_minutes": 8,
+      "purpose": "Use today’s session to turn healing into small daily actions that give your life structure again.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in",
+          "instruction": "How has your current routine been affecting your mood?",
+          "why": "Understanding where you are helps you choose a realistic next step.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Choose what matters today",
+          "instruction": "Review or complete one of your Daily Tasks.",
+          "why": "Small completed actions can help restore a sense of control.",
+          "feature": "daily_tasks"
+        },
+        {
+          "order": 3,
+          "title": "Set a personal goal",
+          "instruction": "Work on a goal or routine that supports your recovery.",
+          "why": "A future-focused goal gives your energy somewhere constructive to go.",
+          "feature": "goals_routines"
+        },
+        {
+          "order": 4,
+          "title": "Change your environment",
+          "instruction": "Take an Outdoor Walk.",
+          "why": "Step away from the same environment and give your mind a physical reset.",
+          "feature": "outdoor_walk"
+        },
+        {
+          "order": 5,
+          "title": "Recognize the effort",
+          "instruction": "Record a win from what you accomplished today.",
+          "why": "Notice the evidence that you are capable of moving forward.",
+          "feature": "wins"
+        }
+      ],
+      "completion": {
+        "title": "You built a little momentum today. 🚶",
+        "message": "A better life is built through small actions repeated over time."
+      }
+    },
+    {
+      "id": "focus_on_your_future",
+      "title": "Focus on Your Future",
+      "category": "Moving Forward",
+      "estimated_minutes": 7,
+      "purpose": "Shift your attention from what ended toward the life you still have the power to build.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Write what is on your mind",
+          "instruction": "Journal about where you are in your healing journey right now.",
+          "why": "Acknowledge where you are before thinking about where you are going.",
+          "feature": "journal"
+        },
+        {
+          "order": 2,
+          "title": "Choose what you are building",
+          "instruction": "Work on a personal goal or routine for your future.",
+          "why": "Your attention becomes more powerful when it is connected to something you want to create.",
+          "feature": "goals_routines"
+        },
+        {
+          "order": 3,
+          "title": "Look at your journey",
+          "instruction": "Review your Healing Journey and the progress you have made.",
+          "why": "Looking back at your progress can make the distance you have traveled easier to see.",
+          "feature": "journey"
+        },
+        {
+          "order": 4,
+          "title": "Reinforce who you are becoming",
+          "instruction": "Complete an affirmation that supports your next chapter.",
+          "why": "Give yourself a clear internal reminder of the direction you are choosing.",
+          "feature": "affirmations"
+        },
+        {
+          "order": 5,
+          "title": "Finish with motivation",
+          "instruction": "Read today's Daily Motivation.",
+          "why": "End by turning your attention toward the next step rather than the last chapter.",
+          "feature": "daily_motivation"
+        }
+      ],
+      "completion": {
+        "title": "Your future is still yours. 🌱",
+        "message": "You do not have to know every step yet. You only need to keep moving forward."
+      }
+    },
+    {
+      "id": "remember_why_you_are_healing",
+      "title": "Remember Why You Are Healing",
+      "category": "No Contact",
+      "estimated_minutes": 6,
+      "purpose": "Reconnect with the reasons you chose No Contact and remind yourself why protecting your progress matters.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in",
+          "instruction": "How are you feeling about your No Contact journey today?",
+          "why": "Recognize your current emotional state before revisiting your reasons.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Remember what hurt",
+          "instruction": "Read the red flags you recorded.",
+          "why": "Your reasons for healing deserve to remain visible when nostalgia appears.",
+          "feature": "reading_red_flags"
+        },
+        {
+          "order": 3,
+          "title": "Remember what you have overcome",
+          "instruction": "Read your recorded wins.",
+          "why": "Every time you chose yourself, you created evidence that you can keep going.",
+          "feature": "reading_wins"
+        },
+        {
+          "order": 4,
+          "title": "Say what you still need to say",
+          "instruction": "Write an unsent letter if there are words you still need to express.",
+          "why": "You can acknowledge unfinished feelings without reopening contact.",
+          "feature": "unsent_letters"
+        },
+        {
+          "order": 5,
+          "title": "Reconnect with your commitment",
+          "instruction": "Review your No Contact Streak.",
+          "why": "Seeing your ongoing progress can reinforce why you do not want one difficult moment to erase it.",
+          "feature": "no_contact_streak"
+        }
+      ],
+      "completion": {
+        "title": "Your healing still matters. 🔥",
+        "message": "You remembered why you started and gave yourself another reason to keep going."
+      }
+    },
+    {
+      "id": "choose_yourself_today",
+      "title": "Choose Yourself Today",
+      "category": "Self-Care & Growth",
+      "estimated_minutes": 7,
+      "purpose": "A balanced session to reconnect with your emotions, your needs, and one positive choice you can make for yourself today.",
+      "steps": [
+        {
+          "order": 1,
+          "title": "Check in with yourself",
+          "instruction": "How are you feeling right now?",
+          "why": "Choosing yourself starts with paying attention to what you actually need.",
+          "feature": "mood_check_in"
+        },
+        {
+          "order": 2,
+          "title": "Clear some mental space",
+          "instruction": "Put one worry or anxious thought into the Worry Box.",
+          "why": "Make room for something more constructive by setting one worry aside.",
+          "feature": "worry_box"
+        },
+        {
+          "order": 3,
+          "title": "Speak to yourself with care",
+          "instruction": "Complete an affirmation.",
+          "why": "Give yourself the same patience you would offer someone you care about.",
+          "feature": "affirmations"
+        },
+        {
+          "order": 4,
+          "title": "Notice something good",
+          "instruction": "Add something you're grateful for today.",
+          "why": "Healing is not only about what you are leaving behind. It is also about noticing what remains.",
+          "feature": "gratitude_jar"
+        },
+        {
+          "order": 5,
+          "title": "Take one step forward",
+          "instruction": "Record one win from today.",
+          "why": "End by recognizing one concrete way you chose yourself.",
+          "feature": "wins"
+        }
+      ],
+      "completion": {
+        "title": "You chose yourself today. ❤️",
+        "message": "That is what healing looks like: one small choice at a time."
+      }
+    }
+  ]
+}
