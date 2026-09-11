@@ -68,7 +68,6 @@ function Pictures() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [editingCaption, setEditingCaption] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
-  const [changingLocation, setChangingLocation] = useState(false);
 
   const pictures = useQuery({
     queryKey: ["pictures", userId],
@@ -154,7 +153,6 @@ function Pictures() {
     mutationFn: (next: StorageLocation) => setStorageLocation(userId, next),
     onSuccess: (next) => {
       queryClient.setQueryData(["picture-storage", userId], next);
-      setChangingLocation(false);
       haptic.light();
     },
     onError: (error) => toast.error(humanizeError(error)),
@@ -276,52 +274,45 @@ function Pictures() {
       <PicturesIllustration className="mx-auto mb-5 mt-1 w-40" />
 
       <SoftCard className="mb-4 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-xs text-muted-foreground">{t("pictures.savingTo")}</p>
-            <p className="text-sm font-semibold">
+        <div>
+          <h2 className="text-base font-semibold">{t("pictures.pictureStorage")}</h2>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="text-xs text-muted-foreground">{t("pictures.savedTo")}</span>
+            <span className="text-sm font-semibold">
               {location === "local" ? t("pictures.thisDevice") : t("pictures.googleDrive")}
-            </p>
+            </span>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
           <Button
-            variant="secondary"
-            className="press h-10 shrink-0 rounded-2xl"
-            onClick={() => setChangingLocation((open) => !open)}
+            variant={location === "local" ? "default" : "secondary"}
+            className="press h-10 rounded-2xl"
+            disabled={chooseLocation.isPending}
+            onClick={() => chooseLocation.mutate("local")}
           >
-            {t("pictures.change")}
+            {t("pictures.thisDevice")}
+          </Button>
+          <Button
+            variant={location === "google_drive" ? "default" : "secondary"}
+            className="press h-10 rounded-2xl"
+            disabled={chooseLocation.isPending}
+            onClick={() => chooseLocation.mutate("google_drive")}
+          >
+            {t("pictures.googleDrive")}
           </Button>
         </div>
-        {changingLocation ? (
-          <div className="grid grid-cols-2 gap-2">
-            <Button
-              variant={location === "local" ? "default" : "secondary"}
-              className="press h-11 rounded-2xl"
-              disabled={chooseLocation.isPending}
-              onClick={() => chooseLocation.mutate("local")}
-            >
-              {t("pictures.thisDevice")}
-            </Button>
-            <Button
-              variant={location === "google_drive" ? "default" : "secondary"}
-              className="press h-11 rounded-2xl"
-              disabled={chooseLocation.isPending}
-              onClick={() => chooseLocation.mutate("google_drive")}
-            >
-              {t("pictures.googleDrive")}
-            </Button>
-          </div>
-        ) : null}
         <p className="text-xs text-muted-foreground">
-          {location === "local" ? t("pictures.deviceNote") : t("pictures.driveNote")}
+          {location === "local"
+            ? t("pictures.newPicturesOnDevice")
+            : t("pictures.newPicturesOnDrive")}
         </p>
-        <p className="text-[11px] text-muted-foreground">{t("pictures.changeAffectsNew")}</p>
       </SoftCard>
 
       {location === "local" || (connected && !reconnectRequired) ? (
         <SoftCard className="space-y-3">
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <Lock className="size-3.5 shrink-0" aria-hidden />
-            {location === "local" ? t("pictures.deviceBadge") : t("pictures.privacyBadge")}
+            {location === "local" ? t("pictures.storedOnDevice") : t("pictures.storedOnDrive")}
           </p>
           <Input
             value={caption}
