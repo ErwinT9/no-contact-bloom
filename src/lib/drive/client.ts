@@ -40,7 +40,10 @@ async function call<T>(action: string, payload: Record<string, unknown> = {}): P
   });
   const body = (await res.json().catch(() => ({}))) as Record<string, unknown>;
   if (!res.ok && res.status !== 409) {
-    throw new Error(String(body["error"] ?? "Google Drive request failed."));
+    const message = String(body["error"] ?? "Google Drive request failed.");
+    const reason = typeof body["reason"] === "string" ? body["reason"] : null;
+    if (reason && import.meta.env.DEV) console.error("[drive]", action, message, reason);
+    throw new Error(reason ? `${message} — ${reason}` : message);
   }
   return body as T;
 }
