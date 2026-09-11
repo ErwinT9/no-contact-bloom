@@ -132,7 +132,10 @@ async function findFolder(
     pageSize: "10",
   });
   const res = await driveFetch(connectionKey, `/drive/v3/files?${query.toString()}`);
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.error(`[drive] folder lookup "${name}" failed [${res.status}]: ${await res.text()}`);
+    return null;
+  }
   const body = (await res.json()) as { files?: Array<{ id?: string }> };
   return body.files?.[0]?.id ?? null;
 }
