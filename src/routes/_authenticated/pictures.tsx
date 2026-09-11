@@ -68,7 +68,6 @@ function Pictures() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [editingCaption, setEditingCaption] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
-  const [changingLocation, setChangingLocation] = useState(false);
 
   const pictures = useQuery({
     queryKey: ["pictures", userId],
@@ -154,7 +153,6 @@ function Pictures() {
     mutationFn: (next: StorageLocation) => setStorageLocation(userId, next),
     onSuccess: (next) => {
       queryClient.setQueryData(["picture-storage", userId], next);
-      setChangingLocation(false);
       haptic.light();
     },
     onError: (error) => toast.error(humanizeError(error)),
@@ -276,52 +274,62 @@ function Pictures() {
       <PicturesIllustration className="mx-auto mb-5 mt-1 w-40" />
 
       <SoftCard className="mb-4 space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="text-xs text-muted-foreground">{t("pictures.savingTo")}</p>
-            <p className="text-sm font-semibold">
+        <div>
+          <h2 className="text-base font-semibold">{t("pictures.pictureStorage")}</h2>
+          <div className="mt-1 flex items-baseline gap-2">
+            <span className="text-xs text-muted-foreground">{t("pictures.savedTo")}</span>
+            <span className="text-sm font-semibold">
               {location === "local" ? t("pictures.thisDevice") : t("pictures.googleDrive")}
-            </p>
+            </span>
           </div>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
           <Button
-            variant="secondary"
-            className="press h-10 shrink-0 rounded-2xl"
-            onClick={() => setChangingLocation((open) => !open)}
+            variant={location === "local" ? "default" : "secondary"}
+            className="press h-10 rounded-2xl"
+            disabled={chooseLocation.isPending}
+            onClick={() => chooseLocation.mutate("local")}
           >
-            {t("pictures.change")}
+            {t("pictures.thisDevice")}
+          </Button>
+          <Button
+            variant={location === "google_drive" ? "default" : "secondary"}
+            className="press h-10 rounded-2xl"
+            disabled={chooseLocation.isPending}
+            onClick={() => chooseLocation.mutate("google_drive")}
+          >
+            {t("pictures.googleDrive")}
           </Button>
         </div>
-        {changingLocation ? (
-          <div className="grid grid-cols-2 gap-2">
+        {location === "google_drive" && !connected ? (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">{t("pictures.connectDriveToSave")}</p>
             <Button
-              variant={location === "local" ? "default" : "secondary"}
-              className="press h-11 rounded-2xl"
-              disabled={chooseLocation.isPending}
-              onClick={() => chooseLocation.mutate("local")}
+              className="press h-10 w-full rounded-2xl"
+              disabled={connecting}
+              onClick={() => connect.mutate()}
             >
-              {t("pictures.thisDevice")}
-            </Button>
-            <Button
-              variant={location === "google_drive" ? "default" : "secondary"}
-              className="press h-11 rounded-2xl"
-              disabled={chooseLocation.isPending}
-              onClick={() => chooseLocation.mutate("google_drive")}
-            >
-              {t("pictures.googleDrive")}
+              {connecting
+                ? t("pictures.connecting")
+                : reconnectRequired
+                  ? t("pictures.reconnectButton")
+                  : t("pictures.connectButton")}
             </Button>
           </div>
-        ) : null}
-        <p className="text-xs text-muted-foreground">
-          {location === "local" ? t("pictures.deviceNote") : t("pictures.driveNote")}
-        </p>
-        <p className="text-[11px] text-muted-foreground">{t("pictures.changeAffectsNew")}</p>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            {location === "local"
+              ? t("pictures.newPicturesOnDevice")
+              : t("pictures.newPicturesOnDrive")}
+          </p>
+        )}
       </SoftCard>
 
       {location === "local" || (connected && !reconnectRequired) ? (
         <SoftCard className="space-y-3">
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <Lock className="size-3.5 shrink-0" aria-hidden />
-            {location === "local" ? t("pictures.deviceBadge") : t("pictures.privacyBadge")}
+            {location === "local" ? t("pictures.storedOnDevice") : t("pictures.storedOnDrive")}
           </p>
           <Input
             value={caption}
@@ -354,27 +362,7 @@ function Pictures() {
             </button>
           ) : null}
         </SoftCard>
-      ) : (
-        <SoftCard className="space-y-3">
-          <h2 className="text-base font-semibold">{t("pictures.connectTitle")}</h2>
-          <p className="text-sm text-muted-foreground">{t("pictures.connectBody")}</p>
-          <p className="text-sm text-muted-foreground">{t("pictures.connectBodyStorage")}</p>
-          {reconnectRequired ? (
-            <p className="text-sm text-muted-foreground">{t("pictures.reconnectBody")}</p>
-          ) : null}
-          <Button
-            className="press h-12 w-full rounded-2xl"
-            disabled={connecting}
-            onClick={() => connect.mutate()}
-          >
-            {connecting
-              ? t("pictures.connecting")
-              : reconnectRequired
-                ? t("pictures.reconnectButton")
-                : t("pictures.connectButton")}
-          </Button>
-        </SoftCard>
-      )}
+      ) : null}
 
       {rows.length === 0 ? (
         <p className="mt-5 px-1 text-sm text-muted-foreground">{t("pictures.noPictures")}</p>
@@ -505,9 +493,9 @@ function Pictures() {
             <p className="flex items-center gap-2 text-[11px] text-muted-foreground">
               <Lock className="size-3.5 shrink-0" aria-hidden />
               {openPicture.storage_kind === "drive"
-                ? t("pictures.privacyNote")
+                ? t("pictures.storedOnDrive")
                 : openPicture.storage_kind === "local"
-                  ? t("pictures.deviceNote")
+                  ? t("pictures.storedOnDevice")
                   : t("pictures.onSteadyServers")}
             </p>
           </div>
