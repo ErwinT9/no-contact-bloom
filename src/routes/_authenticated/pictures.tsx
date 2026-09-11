@@ -275,11 +275,53 @@ function Pictures() {
     <AppShell title={t("pictures.title")} subtitle={t("pictures.subtitle")}>
       <PicturesIllustration className="mx-auto mb-5 mt-1 w-40" />
 
-      {connected && !reconnectRequired ? (
+      <SoftCard className="mb-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs text-muted-foreground">{t("pictures.savingTo")}</p>
+            <p className="text-sm font-semibold">
+              {location === "local" ? t("pictures.thisDevice") : t("pictures.googleDrive")}
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            className="press h-10 shrink-0 rounded-2xl"
+            onClick={() => setChangingLocation((open) => !open)}
+          >
+            {t("pictures.change")}
+          </Button>
+        </div>
+        {changingLocation ? (
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant={location === "local" ? "default" : "secondary"}
+              className="press h-11 rounded-2xl"
+              disabled={chooseLocation.isPending}
+              onClick={() => chooseLocation.mutate("local")}
+            >
+              {t("pictures.thisDevice")}
+            </Button>
+            <Button
+              variant={location === "google_drive" ? "default" : "secondary"}
+              className="press h-11 rounded-2xl"
+              disabled={chooseLocation.isPending}
+              onClick={() => chooseLocation.mutate("google_drive")}
+            >
+              {t("pictures.googleDrive")}
+            </Button>
+          </div>
+        ) : null}
+        <p className="text-xs text-muted-foreground">
+          {location === "local" ? t("pictures.deviceNote") : t("pictures.driveNote")}
+        </p>
+        <p className="text-[11px] text-muted-foreground">{t("pictures.changeAffectsNew")}</p>
+      </SoftCard>
+
+      {location === "local" || (connected && !reconnectRequired) ? (
         <SoftCard className="space-y-3">
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <Lock className="size-3.5 shrink-0" aria-hidden />
-            {t("pictures.privacyBadge")}
+            {location === "local" ? t("pictures.deviceBadge") : t("pictures.privacyBadge")}
           </p>
           <Input
             value={caption}
