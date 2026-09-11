@@ -22,6 +22,16 @@ import { pickImageSource } from "@/lib/avatar";
 import { connectGoogleDrive, drive } from "@/lib/drive/client";
 import { fileToDataUrl, toPictureDataUrl } from "@/lib/drive/image";
 import { openExternalUrl } from "@/lib/openExternal";
+import {
+  readLocalPicture,
+  removeLocalPicture,
+  saveLocalPicture,
+} from "@/lib/pictures/localStore";
+import {
+  getStorageLocation,
+  setStorageLocation,
+  type StorageLocation,
+} from "@/lib/pictures/prefs";
 
 const BUCKET = "activity-pictures";
 
@@ -58,6 +68,7 @@ function Pictures() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [editingCaption, setEditingCaption] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
+  const [changingLocation, setChangingLocation] = useState(false);
 
   const pictures = useQuery({
     queryKey: ["pictures", userId],
@@ -115,9 +126,46 @@ function Pictures() {
     },
   });
 
+  const localRows = rows.filter((row) => row.storage_kind === "local" && row.image_url);
+
+  /** Pictures kept on this device only. */
+  const localImages = useQuery({
+    queryKey: ["pictures-local", userId, localRows.map((row) => row.image_url).join("|")],
+    enabled: localRows.length > 0,
+    staleTime: 30 * 60_000,
+    queryFn: async () => {
+      const map: Record<string, string> = {};
+      for (const row of localRows) {
+        const dataUrl = await readLocalPicture(row.image_url);
+        if (dataUrl) map[row.image_url] = dataUrl;
+      }
+      return map;
+    },
+  });
+
+  const prefs = useQuery({
+    queryKey: ["picture-storage", userId],
+    queryFn: () => getStorageLocation(userId),
+    enabled: Boolean(userId),
+  });
+  const location: StorageLocation = prefs.data ?? "local";
+
+  const chooseLocation = useMutation({
+    mutationFn: (next: StorageLocation) => setStorageLocation(userId, next),
+    onSuccess: (next) => {
+      queryClient.setQueryData(["picture-storage", userId], next);
+      setChangingLocation(false);
+      haptic.light();
+    },
+    onError: (error) => toast.error(humanizeError(error)),
+  });
+
   function sourceFor(picture: Picture): string | undefined {
     if (picture.storage_kind === "drive") {
       return picture.drive_file_id ? driveImages.data?.[picture.drive_file_id] : undefined;
+    }
+    if (picture.storage_kind === "local") {
+      return localImages.data?.[picture.image_url];
     }
     return legacySigned.data?.[picture.image_url];
   }
@@ -147,6 +195,16 @@ function Pictures() {
   const upload = useMutation({
     mutationFn: async (dataUrl: string) => {
       const compact = await toPictureDataUrl(dataUrl);
+      if (location === "local") {
+        const reference = await saveLocalPicture(localId(), compact);
+        return pictureRepo.save(userId, {
+          image_url: reference,
+          caption: caption.trim() || null,
+          storage_kind: "local",
+          drive_file_id: null,
+          drive_web_link: null,
+        });
+      }
       const result = await drive.upload(compact, `steady-${localId()}.jpg`);
       if (result.reconnectRequired || !result.fileId) {
         throw new Error(t("pictures.reconnectBody"));
@@ -166,6 +224,7 @@ function Pictures() {
       haptic.success();
       toast.success(t("pictures.savedToAlbum"));
       await queryClient.invalidateQueries({ queryKey: ["pictures-drive", userId] });
+      await queryClient.invalidateQueries({ queryKey: ["pictures-local", userId] });
     },
     onError: (error) => toast.error(humanizeError(error)),
   });
@@ -185,6 +244,8 @@ function Pictures() {
     mutationFn: async (picture: Picture) => {
       if (picture.storage_kind === "drive") {
         if (picture.drive_file_id) await drive.remove(picture.drive_file_id);
+      } else if (picture.storage_kind === "local") {
+        if (picture.image_url) await removeLocalPicture(picture.image_url);
       } else if (picture.image_url) {
         await supabase.storage.from(BUCKET).remove([picture.image_url]);
       }
@@ -214,11 +275,53 @@ function Pictures() {
     <AppShell title={t("pictures.title")} subtitle={t("pictures.subtitle")}>
       <PicturesIllustration className="mx-auto mb-5 mt-1 w-40" />
 
-      {connected && !reconnectRequired ? (
+      <SoftCard className="mb-4 space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0">
+            <p className="text-xs text-muted-foreground">{t("pictures.savingTo")}</p>
+            <p className="text-sm font-semibold">
+              {location === "local" ? t("pictures.thisDevice") : t("pictures.googleDrive")}
+            </p>
+          </div>
+          <Button
+            variant="secondary"
+            className="press h-10 shrink-0 rounded-2xl"
+            onClick={() => setChangingLocation((open) => !open)}
+          >
+            {t("pictures.change")}
+          </Button>
+        </div>
+        {changingLocation ? (
+          <div className="grid grid-cols-2 gap-2">
+            <Button
+              variant={location === "local" ? "default" : "secondary"}
+              className="press h-11 rounded-2xl"
+              disabled={chooseLocation.isPending}
+              onClick={() => chooseLocation.mutate("local")}
+            >
+              {t("pictures.thisDevice")}
+            </Button>
+            <Button
+              variant={location === "google_drive" ? "default" : "secondary"}
+              className="press h-11 rounded-2xl"
+              disabled={chooseLocation.isPending}
+              onClick={() => chooseLocation.mutate("google_drive")}
+            >
+              {t("pictures.googleDrive")}
+            </Button>
+          </div>
+        ) : null}
+        <p className="text-xs text-muted-foreground">
+          {location === "local" ? t("pictures.deviceNote") : t("pictures.driveNote")}
+        </p>
+        <p className="text-[11px] text-muted-foreground">{t("pictures.changeAffectsNew")}</p>
+      </SoftCard>
+
+      {location === "local" || (connected && !reconnectRequired) ? (
         <SoftCard className="space-y-3">
           <p className="flex items-center gap-2 text-xs text-muted-foreground">
             <Lock className="size-3.5 shrink-0" aria-hidden />
-            {t("pictures.privacyBadge")}
+            {location === "local" ? t("pictures.deviceBadge") : t("pictures.privacyBadge")}
           </p>
           <Input
             value={caption}
@@ -241,13 +344,15 @@ function Pictures() {
             <ImagePlus className="mr-2 size-4" aria-hidden />
             {upload.isPending ? t("pictures.uploading") : t("pictures.addPicture")}
           </Button>
-          <button
-            type="button"
-            onClick={() => disconnect.mutate()}
-            className="press w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
-          >
-            {t("pictures.disconnect")}
-          </button>
+          {connected ? (
+            <button
+              type="button"
+              onClick={() => disconnect.mutate()}
+              className="press w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              {t("pictures.disconnect")}
+            </button>
+          ) : null}
         </SoftCard>
       ) : (
         <SoftCard className="space-y-3">
@@ -298,7 +403,9 @@ function Pictures() {
                     <div className="flex aspect-square w-full items-center justify-center bg-muted px-3 text-center text-[11px] text-muted-foreground">
                       {picture.storage_kind === "drive" && !connected
                         ? t("pictures.privacyBadge")
-                        : t("pictures.unavailableOffline")}
+                        : picture.storage_kind === "local"
+                          ? t("pictures.missingOnDevice")
+                          : t("pictures.unavailableOffline")}
                     </div>
                   )}
                   <div className="space-y-1 p-3">
@@ -399,7 +506,9 @@ function Pictures() {
               <Lock className="size-3.5 shrink-0" aria-hidden />
               {openPicture.storage_kind === "drive"
                 ? t("pictures.privacyNote")
-                : t("pictures.onSteadyServers")}
+                : openPicture.storage_kind === "local"
+                  ? t("pictures.deviceNote")
+                  : t("pictures.onSteadyServers")}
             </p>
           </div>
         </div>
