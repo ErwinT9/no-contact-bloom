@@ -119,6 +119,9 @@ function Pictures() {
     if (picture.storage_kind === "drive") {
       return picture.drive_file_id ? driveImages.data?.[picture.drive_file_id] : undefined;
     }
+    if (picture.storage_kind === "local") {
+      return localImages.data?.[picture.image_url];
+    }
     return legacySigned.data?.[picture.image_url];
   }
 
@@ -147,6 +150,16 @@ function Pictures() {
   const upload = useMutation({
     mutationFn: async (dataUrl: string) => {
       const compact = await toPictureDataUrl(dataUrl);
+      if (location === "local") {
+        const reference = await saveLocalPicture(localId(), compact);
+        return pictureRepo.save(userId, {
+          image_url: reference,
+          caption: caption.trim() || null,
+          storage_kind: "local",
+          drive_file_id: null,
+          drive_web_link: null,
+        });
+      }
       const result = await drive.upload(compact, `steady-${localId()}.jpg`);
       if (result.reconnectRequired || !result.fileId) {
         throw new Error(t("pictures.reconnectBody"));
@@ -166,6 +179,7 @@ function Pictures() {
       haptic.success();
       toast.success(t("pictures.savedToAlbum"));
       await queryClient.invalidateQueries({ queryKey: ["pictures-drive", userId] });
+      await queryClient.invalidateQueries({ queryKey: ["pictures-local", userId] });
     },
     onError: (error) => toast.error(humanizeError(error)),
   });
@@ -185,6 +199,8 @@ function Pictures() {
     mutationFn: async (picture: Picture) => {
       if (picture.storage_kind === "drive") {
         if (picture.drive_file_id) await drive.remove(picture.drive_file_id);
+      } else if (picture.storage_kind === "local") {
+        if (picture.image_url) await removeLocalPicture(picture.image_url);
       } else if (picture.image_url) {
         await supabase.storage.from(BUCKET).remove([picture.image_url]);
       }
