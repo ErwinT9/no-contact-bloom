@@ -344,13 +344,15 @@ function Pictures() {
             <ImagePlus className="mr-2 size-4" aria-hidden />
             {upload.isPending ? t("pictures.uploading") : t("pictures.addPicture")}
           </Button>
-          <button
-            type="button"
-            onClick={() => disconnect.mutate()}
-            className="press w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
-          >
-            {t("pictures.disconnect")}
-          </button>
+          {connected ? (
+            <button
+              type="button"
+              onClick={() => disconnect.mutate()}
+              className="press w-full text-center text-xs text-muted-foreground underline-offset-4 hover:underline"
+            >
+              {t("pictures.disconnect")}
+            </button>
+          ) : null}
         </SoftCard>
       ) : (
         <SoftCard className="space-y-3">
