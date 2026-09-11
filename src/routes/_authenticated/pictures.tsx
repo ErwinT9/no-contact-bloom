@@ -403,7 +403,9 @@ function Pictures() {
                     <div className="flex aspect-square w-full items-center justify-center bg-muted px-3 text-center text-[11px] text-muted-foreground">
                       {picture.storage_kind === "drive" && !connected
                         ? t("pictures.privacyBadge")
-                        : t("pictures.unavailableOffline")}
+                        : picture.storage_kind === "local"
+                          ? t("pictures.missingOnDevice")
+                          : t("pictures.unavailableOffline")}
                     </div>
                   )}
                   <div className="space-y-1 p-3">
@@ -504,7 +506,9 @@ function Pictures() {
               <Lock className="size-3.5 shrink-0" aria-hidden />
               {openPicture.storage_kind === "drive"
                 ? t("pictures.privacyNote")
-                : t("pictures.onSteadyServers")}
+                : openPicture.storage_kind === "local"
+                  ? t("pictures.deviceNote")
+                  : t("pictures.onSteadyServers")}
             </p>
           </div>
         </div>
