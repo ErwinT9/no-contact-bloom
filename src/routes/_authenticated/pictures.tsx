@@ -22,6 +22,16 @@ import { pickImageSource } from "@/lib/avatar";
 import { connectGoogleDrive, drive } from "@/lib/drive/client";
 import { fileToDataUrl, toPictureDataUrl } from "@/lib/drive/image";
 import { openExternalUrl } from "@/lib/openExternal";
+import {
+  readLocalPicture,
+  removeLocalPicture,
+  saveLocalPicture,
+} from "@/lib/pictures/localStore";
+import {
+  getStorageLocation,
+  setStorageLocation,
+  type StorageLocation,
+} from "@/lib/pictures/prefs";
 
 const BUCKET = "activity-pictures";
 
@@ -58,6 +68,7 @@ function Pictures() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [editingCaption, setEditingCaption] = useState<string | null>(null);
   const [connecting, setConnecting] = useState(false);
+  const [changingLocation, setChangingLocation] = useState(false);
 
   const pictures = useQuery({
     queryKey: ["pictures", userId],
@@ -113,6 +124,40 @@ function Pictures() {
       }
       return map;
     },
+  });
+
+  const localRows = rows.filter((row) => row.storage_kind === "local" && row.image_url);
+
+  /** Pictures kept on this device only. */
+  const localImages = useQuery({
+    queryKey: ["pictures-local", userId, localRows.map((row) => row.image_url).join("|")],
+    enabled: localRows.length > 0,
+    staleTime: 30 * 60_000,
+    queryFn: async () => {
+      const map: Record<string, string> = {};
+      for (const row of localRows) {
+        const dataUrl = await readLocalPicture(row.image_url);
+        if (dataUrl) map[row.image_url] = dataUrl;
+      }
+      return map;
+    },
+  });
+
+  const prefs = useQuery({
+    queryKey: ["picture-storage", userId],
+    queryFn: () => getStorageLocation(userId),
+    enabled: Boolean(userId),
+  });
+  const location: StorageLocation = prefs.data ?? "local";
+
+  const chooseLocation = useMutation({
+    mutationFn: (next: StorageLocation) => setStorageLocation(userId, next),
+    onSuccess: (next) => {
+      queryClient.setQueryData(["picture-storage", userId], next);
+      setChangingLocation(false);
+      haptic.light();
+    },
+    onError: (error) => toast.error(humanizeError(error)),
   });
 
   function sourceFor(picture: Picture): string | undefined {
