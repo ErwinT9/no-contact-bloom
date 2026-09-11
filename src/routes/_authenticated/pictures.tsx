@@ -301,11 +301,28 @@ function Pictures() {
             {t("pictures.googleDrive")}
           </Button>
         </div>
-        <p className="text-xs text-muted-foreground">
-          {location === "local"
-            ? t("pictures.newPicturesOnDevice")
-            : t("pictures.newPicturesOnDrive")}
-        </p>
+        {location === "google_drive" && !connected ? (
+          <div className="space-y-2">
+            <p className="text-xs text-muted-foreground">{t("pictures.connectDriveToSave")}</p>
+            <Button
+              className="press h-10 w-full rounded-2xl"
+              disabled={connecting}
+              onClick={() => connect.mutate()}
+            >
+              {connecting
+                ? t("pictures.connecting")
+                : reconnectRequired
+                  ? t("pictures.reconnectButton")
+                  : t("pictures.connectButton")}
+            </Button>
+          </div>
+        ) : (
+          <p className="text-xs text-muted-foreground">
+            {location === "local"
+              ? t("pictures.newPicturesOnDevice")
+              : t("pictures.newPicturesOnDrive")}
+          </p>
+        )}
       </SoftCard>
 
       {location === "local" || (connected && !reconnectRequired) ? (
@@ -345,27 +362,7 @@ function Pictures() {
             </button>
           ) : null}
         </SoftCard>
-      ) : (
-        <SoftCard className="space-y-3">
-          <h2 className="text-base font-semibold">{t("pictures.connectTitle")}</h2>
-          <p className="text-sm text-muted-foreground">{t("pictures.connectBody")}</p>
-          <p className="text-sm text-muted-foreground">{t("pictures.connectBodyStorage")}</p>
-          {reconnectRequired ? (
-            <p className="text-sm text-muted-foreground">{t("pictures.reconnectBody")}</p>
-          ) : null}
-          <Button
-            className="press h-12 w-full rounded-2xl"
-            disabled={connecting}
-            onClick={() => connect.mutate()}
-          >
-            {connecting
-              ? t("pictures.connecting")
-              : reconnectRequired
-                ? t("pictures.reconnectButton")
-                : t("pictures.connectButton")}
-          </Button>
-        </SoftCard>
-      )}
+      ) : null}
 
       {rows.length === 0 ? (
         <p className="mt-5 px-1 text-sm text-muted-foreground">{t("pictures.noPictures")}</p>
@@ -496,9 +493,9 @@ function Pictures() {
             <p className="flex items-center gap-2 text-[11px] text-muted-foreground">
               <Lock className="size-3.5 shrink-0" aria-hidden />
               {openPicture.storage_kind === "drive"
-                ? t("pictures.privacyNote")
+                ? t("pictures.storedOnDrive")
                 : openPicture.storage_kind === "local"
-                  ? t("pictures.deviceNote")
+                  ? t("pictures.storedOnDevice")
                   : t("pictures.onSteadyServers")}
             </p>
           </div>
