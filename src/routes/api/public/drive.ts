@@ -335,16 +335,31 @@ export const Route = createFileRoute("/api/public/drive")({
             const dataUrl = String(payload["dataUrl"] ?? "");
             const match = /^data:([^;]+);base64,(.+)$/.exec(dataUrl);
             if (!match) return json({ error: "Invalid image data" }, 400);
-            const mimeType = match[1];
+            const mimeType = match[1] ?? "image/jpeg";
             const name = String(payload["name"] ?? `picture-${Date.now()}.jpg`);
-            const folderId = await ensurePicturesFolder(connectionKey);
+
+            let folderId: string;
+            try {
+              folderId = await ensurePicturesFolder(connectionKey);
+            } catch (folderError) {
+              const reason = folderError instanceof Error ? folderError.message : "unknown";
+              console.error(`[drive] folder step failed: ${reason}`);
+              return json({ error: "Could not open your STEADY/Pictures folder.", reason }, 502);
+            }
+
+            // Binary multipart/related: metadata part + raw image bytes.
+            const raw = atob(match[2] ?? "");
+            const bytes = new Uint8Array(raw.length);
+            for (let i = 0; i < raw.length; i += 1) bytes[i] = raw.charCodeAt(i);
 
             const boundary = `steady${crypto.randomUUID()}`;
             const metadata = JSON.stringify({ name, parents: [folderId] });
-            const head =
-              `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}` +
-              `\r\n--${boundary}\r\nContent-Type: ${mimeType}\r\nContent-Transfer-Encoding: base64\r\n\r\n`;
-            const body = `${head}${match[2]}\r\n--${boundary}--`;
+            const body = new Blob([
+              `--${boundary}\r\nContent-Type: application/json; charset=UTF-8\r\n\r\n${metadata}\r\n`,
+              `--${boundary}\r\nContent-Type: ${mimeType}\r\n\r\n`,
+              bytes,
+              `\r\n--${boundary}--\r\n`,
+            ]);
 
             const res = await driveFetch(
               connectionKey,
@@ -358,8 +373,17 @@ export const Route = createFileRoute("/api/public/drive")({
             );
             if (await needsReconnect(res)) return json({ reconnectRequired: true }, 409);
             if (!res.ok) {
-              console.error(`[drive] upload failed [${res.status}]: ${await res.text()}`);
-              return json({ error: `Drive upload failed [${res.status}]` }, 502);
+              const detail = await res.text();
+              console.error(`[drive] upload failed [${res.status}]: ${detail}`);
+              return json(
+                {
+                  error: `Drive upload failed [${res.status}]`,
+                  status: res.status,
+                  operation: "upload",
+                  reason: detail.slice(0, 500),
+                },
+                502,
+              );
             }
             const created = (await res.json()) as { id: string; webViewLink?: string };
             return json({ fileId: created.id, webViewLink: created.webViewLink ?? null });
