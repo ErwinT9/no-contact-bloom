@@ -131,8 +131,9 @@ function DailyExerciseScreen() {
       if (!userId) return;
       const entry = featureEntry(step.feature);
       if (!entry) return;
+      let baseline = 0;
       if ("count" in entry && entry.count) {
-        const baseline = await countFor(entry.count as ExerciseCountSource, userId);
+        baseline = await countFor(entry.count as ExerciseCountSource, userId);
         await dailyExerciseRepo.setBaseline(userId, step.order, baseline);
       } else {
         await dailyExerciseRepo.markOpened(userId, step.order);
@@ -148,7 +149,17 @@ function DailyExerciseScreen() {
         setSosOpen(true);
         return;
       }
-      if ("to" in entry && entry.to) await navigate({ to: entry.to });
+      if ("to" in entry && entry.to) {
+        // Navigation context only: lets the existing feature offer a way back to
+        // this exact session, and returns the user here on a real save.
+        setGuidedContext({
+          order: step.order,
+          path: entry.to,
+          count: "count" in entry && entry.count ? entry.count : null,
+          baseline,
+        });
+        await navigate({ to: entry.to });
+      }
     },
     onError: (error) => toast.error(humanizeError(error)),
   });
