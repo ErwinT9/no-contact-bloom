@@ -73,6 +73,8 @@ function DailyExerciseScreen() {
 
   useEffect(() => {
     analytics.screen("daily_exercise");
+    // Back on the exercise screen: the contextual "return here" strip is done.
+    clearGuidedContext();
   }, []);
 
   const state = useQuery({
