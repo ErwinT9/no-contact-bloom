@@ -102,7 +102,8 @@ export function GuidedExerciseBar() {
         type="button"
         aria-label="Leave guided exercise"
         onClick={() => {
-          returnToExercise();
+          haptic.light();
+          clearGuidedContext();
         }}
         className="press flex size-9 items-center justify-center rounded-full text-muted-foreground"
       >
