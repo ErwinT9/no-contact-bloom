@@ -1,5 +1,7 @@
 import type { PluginListenerHandle } from "@capacitor/core";
 
+import { clearGuidedContext, getGuidedContext } from "@/lib/dailyExercise/guidedContext";
+
 import { isNative } from "./platform";
 
 /** Screens that act as a root destination: back here should background the app. */
@@ -21,7 +23,10 @@ function closeTopOverlay(): boolean {
  * - Inside the app -> go back one screen.
  * - On Home (or auth/splash) -> minimize the app, never return to the splash.
  */
-export function initAndroidBackButton(navigateHome: () => void): () => void {
+export function initAndroidBackButton(
+  navigateHome: () => void,
+  navigateToExercise: () => void,
+): () => void {
   if (!isNative()) return () => {};
 
   let handle: PluginListenerHandle | undefined;
@@ -31,6 +36,17 @@ export function initAndroidBackButton(navigateHome: () => void): () => void {
     try {
       const { App } = await import("@capacitor/app");
       const listener = await App.addListener("backButton", () => {
+        const guided = getGuidedContext();
+        if (guided) {
+          clearGuidedContext();
+          if (window.location.pathname === "/daily-exercise") {
+            closeTopOverlay();
+          } else {
+            navigateToExercise();
+          }
+          return;
+        }
+
         if (closeTopOverlay()) return;
 
         const path = window.location.pathname;

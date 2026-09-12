@@ -73,7 +73,8 @@ function DailyExerciseScreen() {
 
   useEffect(() => {
     analytics.screen("daily_exercise");
-    // Back on the exercise screen: the contextual "return here" strip is done.
+    // A route-based feature returning here is done with its contextual strip.
+    // In-place tools create their context after this screen has mounted.
     clearGuidedContext();
   }, []);
 
@@ -142,6 +143,16 @@ function DailyExerciseScreen() {
       }
       await refresh();
 
+      // Set the guided origin before opening every mapped feature. Mood and SOS
+      // are dialogs on this route; route-based tools use their own destination.
+      const destination = "to" in entry && entry.to ? entry.to : "/daily-exercise";
+      setGuidedContext({
+        order: step.order,
+        path: destination,
+        count: "count" in entry && entry.count ? entry.count : null,
+        baseline,
+      });
+
       if (entry.kind === "mood") {
         setMoodOpen(true);
         return;
@@ -152,14 +163,6 @@ function DailyExerciseScreen() {
         return;
       }
       if ("to" in entry && entry.to) {
-        // Navigation context only: lets the existing feature offer a way back to
-        // this exact session, and returns the user here on a real save.
-        setGuidedContext({
-          order: step.order,
-          path: entry.to,
-          count: "count" in entry && entry.count ? entry.count : null,
-          baseline,
-        });
         await navigate({ to: entry.to });
       }
     },
@@ -179,6 +182,8 @@ function DailyExerciseScreen() {
         queryClient.invalidateQueries({ queryKey: ["moods", userId] }),
         refresh(),
       ]);
+      setMoodOpen(false);
+      clearGuidedContext();
     },
     onError: (error) => toast.error(humanizeError(error)),
   });
@@ -354,13 +359,23 @@ function DailyExerciseScreen() {
 
       <MoodCheckIn
         open={moodOpen}
-        onOpenChange={setMoodOpen}
+        onOpenChange={(open) => {
+          setMoodOpen(open);
+          if (!open) clearGuidedContext();
+        }}
         saving={saveMood.isPending}
         onComplete={async (result) => {
           await saveMood.mutateAsync(result);
         }}
       />
-      <SosToolkit open={sosOpen} onOpenChange={setSosOpen} initialTool={sosTool} />
+      <SosToolkit
+        open={sosOpen}
+        onOpenChange={(open) => {
+          setSosOpen(open);
+          if (!open) clearGuidedContext();
+        }}
+        initialTool={sosTool}
+      />
     </SubScreen>
   );
 }
