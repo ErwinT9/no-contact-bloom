@@ -1,5 +1,6 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 
+import { GuidedExerciseBar } from "@/components/GuidedExerciseBar";
 import { waitForOAuthSession } from "@/lib/auth/oauthHash";
 import { getCachedSession } from "@/lib/auth/session";
 
@@ -15,5 +16,10 @@ export const Route = createFileRoute("/_authenticated")({
     if (!session?.user) throw redirect({ to: "/auth" });
     return { user: session.user };
   },
-  component: () => <Outlet />,
+  component: () => (
+    <>
+      <GuidedExerciseBar />
+      <Outlet />
+    </>
+  ),
 });

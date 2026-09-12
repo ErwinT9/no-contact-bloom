@@ -10,21 +10,13 @@ import { SosToolkit } from "@/components/SosToolkit";
 import { SubScreen } from "@/components/SubScreen";
 import { Button } from "@/components/ui/button";
 import { dailyExerciseRepo } from "@/data/dailyExerciseRepo";
-import {
-  affirmationRepo,
-  flagRepo,
-  gratitudeRepo,
-  journalRepo,
-  letterRepo,
-  moodRepo,
-  triggerRepo,
-  winRepo,
-  worryRepo,
-} from "@/data/repository";
+import { moodRepo } from "@/data/repository";
 import { useAuth } from "@/hooks/useAuth";
 import { analytics, humanizeError } from "@/lib/analytics";
 import { orderedSteps, sessionById, type ExerciseStep } from "@/lib/dailyExercise/content";
+import { countFor } from "@/lib/dailyExercise/counts";
 import { featureEntry, type ExerciseCountSource } from "@/lib/dailyExercise/features";
+import { clearGuidedContext, setGuidedContext } from "@/lib/dailyExercise/guidedContext";
 import { haptic } from "@/lib/native/haptics";
 import { formatLocalDateTime } from "@/lib/datetime";
 
@@ -47,30 +39,6 @@ export const Route = createFileRoute("/_authenticated/daily-exercise")({
   component: DailyExerciseScreen,
 });
 
-async function countFor(source: ExerciseCountSource, userId: string): Promise<number> {
-  switch (source) {
-    case "moods":
-      return (await moodRepo.list(userId)).length;
-    case "journal":
-      return (await journalRepo.list(userId)).length;
-    case "triggers":
-      return (await triggerRepo.list(userId)).length;
-    case "flags":
-      return (await flagRepo.list(userId)).length;
-    case "wins":
-      return (await winRepo.list(userId)).length;
-    case "letters":
-      return (await letterRepo.list(userId)).length;
-    case "affirmations":
-      return (await affirmationRepo.list(userId)).length;
-    case "worries":
-      return (await worryRepo.list(userId)).length;
-    case "gratitude":
-      return (await gratitudeRepo.list(userId)).length;
-    default:
-      return 0;
-  }
-}
 
 function StepBadge({ done, locked, index }: { done: boolean; locked: boolean; index: number }) {
   return (
@@ -105,6 +73,8 @@ function DailyExerciseScreen() {
 
   useEffect(() => {
     analytics.screen("daily_exercise");
+    // Back on the exercise screen: the contextual "return here" strip is done.
+    clearGuidedContext();
   }, []);
 
   const state = useQuery({
@@ -163,8 +133,9 @@ function DailyExerciseScreen() {
       if (!userId) return;
       const entry = featureEntry(step.feature);
       if (!entry) return;
+      let baseline = 0;
       if ("count" in entry && entry.count) {
-        const baseline = await countFor(entry.count as ExerciseCountSource, userId);
+        baseline = await countFor(entry.count as ExerciseCountSource, userId);
         await dailyExerciseRepo.setBaseline(userId, step.order, baseline);
       } else {
         await dailyExerciseRepo.markOpened(userId, step.order);
@@ -180,7 +151,17 @@ function DailyExerciseScreen() {
         setSosOpen(true);
         return;
       }
-      if ("to" in entry && entry.to) await navigate({ to: entry.to });
+      if ("to" in entry && entry.to) {
+        // Navigation context only: lets the existing feature offer a way back to
+        // this exact session, and returns the user here on a real save.
+        setGuidedContext({
+          order: step.order,
+          path: entry.to,
+          count: "count" in entry && entry.count ? entry.count : null,
+          baseline,
+        });
+        await navigate({ to: entry.to });
+      }
     },
     onError: (error) => toast.error(humanizeError(error)),
   });
@@ -314,12 +295,9 @@ function DailyExerciseScreen() {
                     ) : null}
                     {isCurrent ? (
                       <>
-                        {previousStep ? (
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            <span className="font-medium text-primary">✓ Step complete</span> — now
-                            let's move on to “{step.title}”.
-                          </p>
-                        ) : null}
+                        <p className="mt-1 text-sm font-medium text-muted-foreground">
+                          {previousStep ? "Unlocked — next up" : "Ready to start"}
+                        </p>
                         <p className="mt-2 text-sm">{step.instruction}</p>
                         <p className="mt-2 text-sm text-muted-foreground">{step.why}</p>
                         <Button
