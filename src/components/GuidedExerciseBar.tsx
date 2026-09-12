@@ -1,6 +1,7 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useAuth } from "@/hooks/useAuth";
 import { countFor } from "@/lib/dailyExercise/counts";
@@ -31,8 +32,22 @@ export function GuidedExerciseBar() {
     return subscribeGuidedContext(() => setContext(getGuidedContext()));
   }, [pathname]);
 
-  const onExerciseScreen = pathname.startsWith("/daily-exercise");
-  const visible = Boolean(context) && !onExerciseScreen;
+  // Route-based tools are active only on their exact destination. In-place
+  // tools such as Mood Check-In use /daily-exercise as their destination and
+  // remain visible above the dialog while it is open.
+  const visible = Boolean(context) && context?.path === pathname;
+
+  const returnToExercise = () => {
+    haptic.light();
+    clearGuidedContext();
+    if (pathname === "/daily-exercise") {
+      // Mood Check-In and SOS are existing dialogs on this route. Close the
+      // active dialog rather than navigating to the route that is already open.
+      document.dispatchEvent(new KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+      return;
+    }
+    void navigate({ to: "/daily-exercise" });
+  };
 
   // Push the app content down so the strip never covers a feature's own header.
   useEffect(() => {
@@ -74,14 +89,14 @@ export function GuidedExerciseBar() {
 
   if (!visible) return null;
 
-  return (
-    <div className="fixed inset-x-0 top-0 z-[60] flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 backdrop-blur">
+  return createPortal(
+    <div
+      className="pointer-events-auto fixed inset-x-0 top-0 flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 text-foreground shadow-sm backdrop-blur"
+      style={{ zIndex: 2147483647 }}
+    >
       <button
         type="button"
-        onClick={() => {
-          haptic.light();
-          void navigate({ to: "/daily-exercise" });
-        }}
+        onClick={returnToExercise}
         className="press flex min-h-11 flex-1 items-center gap-2 rounded-xl px-2 text-left text-sm font-medium"
       >
         <ArrowLeft className="size-4 shrink-0" aria-hidden />
@@ -98,6 +113,7 @@ export function GuidedExerciseBar() {
       >
         <X className="size-4" aria-hidden />
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }

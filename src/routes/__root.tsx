@@ -184,6 +184,8 @@ function RootComponent() {
     const disposeTheme = initTheme();
     const disposeBack = initAndroidBackButton(() => {
       void router.navigate({ to: "/home", replace: true });
+    }, () => {
+      void router.navigate({ to: "/daily-exercise" });
     });
     return () => {
       setPushNavigator(null);
