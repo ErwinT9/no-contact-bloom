@@ -17,7 +17,19 @@ export type GuidedContext = {
   count: string | null;
   /** Row count of that list when the step was started. */
   baseline: number;
+  /** Curated session that is active today, kept so the return is exact. */
+  sessionId?: string | null;
+  /** Local calendar day the active session belongs to. */
+  localDate?: string | null;
 };
+
+/**
+ * True while the user is still inside the feature the step opened — including
+ * any of that feature's own sub-screens (e.g. a healing-audio category).
+ */
+export function matchesGuidedPath(contextPath: string, pathname: string): boolean {
+  return pathname === contextPath || pathname.startsWith(`${contextPath}/`);
+}
 
 const KEY = "steady.guidedExerciseContext";
 const EVENT = "steady:guided-exercise-context";

@@ -9,6 +9,7 @@ import type { ExerciseCountSource } from "@/lib/dailyExercise/features";
 import {
   clearGuidedContext,
   getGuidedContext,
+  matchesGuidedPath,
   subscribeGuidedContext,
   type GuidedContext,
 } from "@/lib/dailyExercise/guidedContext";
@@ -32,10 +33,10 @@ export function GuidedExerciseBar() {
     return subscribeGuidedContext(() => setContext(getGuidedContext()));
   }, [pathname]);
 
-  // Route-based tools are active only on their exact destination. In-place
-  // tools such as Mood Check-In use /daily-exercise as their destination and
-  // remain visible above the dialog while it is open.
-  const visible = Boolean(context) && context?.path === pathname;
+  // Any mapped feature launched from a step is "active" on its destination and
+  // on that feature's own sub-screens. In-place tools (Mood Check-In, SOS) use
+  // /daily-exercise as their destination and stay visible above the dialog.
+  const visible = Boolean(context) && matchesGuidedPath(context!.path, pathname);
 
   const returnToExercise = () => {
     haptic.light();
