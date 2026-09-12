@@ -39,30 +39,6 @@ export const Route = createFileRoute("/_authenticated/daily-exercise")({
   component: DailyExerciseScreen,
 });
 
-async function countFor(source: ExerciseCountSource, userId: string): Promise<number> {
-  switch (source) {
-    case "moods":
-      return (await moodRepo.list(userId)).length;
-    case "journal":
-      return (await journalRepo.list(userId)).length;
-    case "triggers":
-      return (await triggerRepo.list(userId)).length;
-    case "flags":
-      return (await flagRepo.list(userId)).length;
-    case "wins":
-      return (await winRepo.list(userId)).length;
-    case "letters":
-      return (await letterRepo.list(userId)).length;
-    case "affirmations":
-      return (await affirmationRepo.list(userId)).length;
-    case "worries":
-      return (await worryRepo.list(userId)).length;
-    case "gratitude":
-      return (await gratitudeRepo.list(userId)).length;
-    default:
-      return 0;
-  }
-}
 
 function StepBadge({ done, locked, index }: { done: boolean; locked: boolean; index: number }) {
   return (
