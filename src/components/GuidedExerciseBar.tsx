@@ -90,7 +90,10 @@ export function GuidedExerciseBar() {
   if (!visible) return null;
 
   return createPortal(
-    <div className="fixed inset-x-0 top-0 z-[100] flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 text-foreground shadow-sm backdrop-blur">
+    <div
+      className="fixed inset-x-0 top-0 flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 text-foreground shadow-sm backdrop-blur"
+      style={{ zIndex: 2147483647 }}
+    >
       <button
         type="button"
         onClick={returnToExercise}
