@@ -9,6 +9,7 @@ import type { ExerciseCountSource } from "@/lib/dailyExercise/features";
 import {
   clearGuidedContext,
   getGuidedContext,
+  matchesGuidedPath,
   subscribeGuidedContext,
   type GuidedContext,
 } from "@/lib/dailyExercise/guidedContext";
