@@ -1,6 +1,7 @@
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { ArrowLeft, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 
 import { useAuth } from "@/hooks/useAuth";
 import { countFor } from "@/lib/dailyExercise/counts";
@@ -88,8 +89,8 @@ export function GuidedExerciseBar() {
 
   if (!visible) return null;
 
-  return (
-    <div className="fixed inset-x-0 top-0 z-[60] flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 backdrop-blur">
+  return createPortal(
+    <div className="fixed inset-x-0 top-0 z-[100] flex items-center gap-2 border-b border-border/60 bg-background/95 px-3 pt-[env(safe-area-inset-top)] pb-2 text-foreground shadow-sm backdrop-blur">
       <button
         type="button"
         onClick={returnToExercise}
@@ -109,6 +110,7 @@ export function GuidedExerciseBar() {
       >
         <X className="size-4" aria-hidden />
       </button>
-    </div>
+    </div>,
+    document.body,
   );
 }
