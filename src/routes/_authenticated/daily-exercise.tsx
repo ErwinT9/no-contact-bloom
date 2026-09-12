@@ -314,12 +314,9 @@ function DailyExerciseScreen() {
                     ) : null}
                     {isCurrent ? (
                       <>
-                        {previousStep ? (
-                          <p className="mt-2 text-sm text-muted-foreground">
-                            <span className="font-medium text-primary">✓ Step complete</span> — now
-                            let's move on to “{step.title}”.
-                          </p>
-                        ) : null}
+                        <p className="mt-1 text-sm font-medium text-secondary-foreground">
+                          {previousStep ? "Unlocked — next up" : "Ready to start"}
+                        </p>
                         <p className="mt-2 text-sm">{step.instruction}</p>
                         <p className="mt-2 text-sm text-muted-foreground">{step.why}</p>
                         <Button
