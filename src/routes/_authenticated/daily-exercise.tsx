@@ -10,21 +10,13 @@ import { SosToolkit } from "@/components/SosToolkit";
 import { SubScreen } from "@/components/SubScreen";
 import { Button } from "@/components/ui/button";
 import { dailyExerciseRepo } from "@/data/dailyExerciseRepo";
-import {
-  affirmationRepo,
-  flagRepo,
-  gratitudeRepo,
-  journalRepo,
-  letterRepo,
-  moodRepo,
-  triggerRepo,
-  winRepo,
-  worryRepo,
-} from "@/data/repository";
+import { moodRepo } from "@/data/repository";
 import { useAuth } from "@/hooks/useAuth";
 import { analytics, humanizeError } from "@/lib/analytics";
 import { orderedSteps, sessionById, type ExerciseStep } from "@/lib/dailyExercise/content";
+import { countFor } from "@/lib/dailyExercise/counts";
 import { featureEntry, type ExerciseCountSource } from "@/lib/dailyExercise/features";
+import { clearGuidedContext, setGuidedContext } from "@/lib/dailyExercise/guidedContext";
 import { haptic } from "@/lib/native/haptics";
 import { formatLocalDateTime } from "@/lib/datetime";
 
