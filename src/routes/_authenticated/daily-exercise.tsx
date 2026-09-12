@@ -151,6 +151,8 @@ function DailyExerciseScreen() {
         path: destination,
         count: "count" in entry && entry.count ? entry.count : null,
         baseline,
+        sessionId: state.data?.session_id ?? null,
+        localDate: state.data?.local_date ?? null,
       });
 
       if (entry.kind === "mood") {
